@@ -1,0 +1,4 @@
+# Configuration for algorithmically merging boxes
+max_angle_delta: 10.0  # Maximum angle deviation between boxes in degrees.
+max_vertical_offset: 0.25  # Maximum tolerable vertical offset as a percentage of vertical size.
+max_horizontal_separation: 2.0  # Maximum horizontal separation as a multiplier of box width.
