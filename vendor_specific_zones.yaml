@@ -1,0 +1,8 @@
+# Rectangular regions where human written text is likely
+# [top left x, top left y, bottom right x, bottom right y]
+philips:
+  - [0, 1, 2, 3]
+  - [10, 55, 55, 90]
+siemens:
+  - [10, 11, 21, 31]
+  - [101, 551, 551, 901]

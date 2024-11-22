@@ -3,69 +3,60 @@ import sys
 import yaml
 from src.config_loader import load_yaml_config
 from src.ocr_engine import OCREngine
+from src.box_merger import post_process
+from src.image_redactor import apply_vendor_specific_zones
+from PIL import Image
 
-def process_directory(engine, directory_path, output_directory, settings, vendor_exclusion_zones):
+def process_ultrasound_scans(input_directory_str, output_directory_str, settings_dict, vendor_specific_zones_dict):
     """
-    Processes all image files in a given directory using an OCR engine and saves the results to a YAML file.
-
-    Args:
-        engine (OCREngine): The instance of the OCR engine used for processing images.
-        directory_path (str): The path to the directory containing image files to process.
-        output_directory (str): The path to the directory where the results file will be saved.
-        settings (dict): Configuration settings for the OCR engine.
-        vendor_exclusion_zones (dict): Zones to exclude from OCR processing, as specified by the vendor.
-
-    Returns:
-        None
+    Main program callpoint.
+    Processes all image files in a given directory, and saves the results to a YAML file.
     """
     
-    # Dictionary to store OCR results for each image
+    # Initialize the OCR engine once
+    engine = OCREngine()
+
+    # Iterate over all files inside the input directory, and process them if they are images
     ocr_results = {}
+    for filename in os.listdir(input_directory_str):
+        if filename.lower().endswith((".png", ".jpg", ".jpeg", ".tiff", ".gif")):            
+            print(f"Processing image: {filename}")
 
-    # Iterate over all files in the given directory
-    for filename in os.listdir(directory_path):
-        image_path = os.path.join(directory_path, filename)
+            # 1) Black out unneeded regions of the image
+            with Image.open(os.path.join(input_directory_str, filename)) as image:
+                simplified_image = apply_vendor_specific_zones(image, input_directory_str, vendor_specific_zones_dict)
 
-        # Check if the file is an image based on its extension
-        if filename.lower().endswith((".png", ".jpg", ".jpeg", ".tiff", ".gif")):
-            print(f"Processing {filename}")
-            ocr_results[filename] = engine.process_image(image_path, vendor_exclusion_zones, settings)
+            # 2) Pass image through the OCR engine
+            result = engine.run_ocr(simplified_image)
+            
+            # 3) Clean up artifacts and spellcheck detected words
+            post_processed_result = post_process(result, settings_dict)
 
-    # Define output file location
-    output_file_path = os.path.join(output_directory, "ocr_results.yaml")
-    
-    # Write OCR results to a YAML file
-    with open(output_file_path, "w") as yaml_file:
-        yaml.dump(ocr_results, yaml_file, default_flow_style=False)
+            # 4) Store result in readable format
+            ocr_results[filename] = [line[1] for line in post_processed_result]
 
-    print(f"OCR results written to {output_file_path}")
+    # Save all the results
+    output_file_path = os.path.join(output_directory_str, "ocr_results.yaml")
+    with open(output_file_path, "w") as output_file:
+        yaml.dump(ocr_results, output_file, default_flow_style=False)
+        print(f"OCR results written to {output_file_path}")
 
 if __name__ == "__main__":
-    """Main program entrypoint.
-
-    Called by application.
     """
-        
-    # Check if the correct number of command-line arguments is provided
+    Example command line driver.
+    """
+
     if len(sys.argv) != 5:
-        print("Usage: python main.py <image_directory> <output_directory> <settings.yaml> <vendor_exclusion_zones.yaml>")
+        # Incorrect number of arguments
+        print("Usage: python main.py <input_directory> <output_directory> <settings.yaml> <vendor_specific_zones.yaml>")
         sys.exit(1)
 
-    # Get the input directory containing images and output directory location from command-line arguments
-    directory_path = sys.argv[1]
+    input_directory = sys.argv[1]
     output_directory = sys.argv[2]
-
-    # Check and create output directory if it doesn't exist
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
-    # Load settings and vendor exclusion zones from YAML files
-    settings_file = sys.argv[3]
-    settings = load_yaml_config(settings_file)
-    vendor_exclusion_zones_file = sys.argv[4]
-    vendor_exclusion_zones = load_yaml_config(vendor_exclusion_zones_file)
+    settings = load_yaml_config(sys.argv[3])
+    vendor_specific_zones = load_yaml_config(sys.argv[4])
 
-    # Initialize the OCR engine once for global use
-    engine = OCREngine()
-
-    process_directory(engine, directory_path, output_directory, settings, vendor_exclusion_zones)
+    process_ultrasound_scans(input_directory, output_directory, settings, vendor_specific_zones)
