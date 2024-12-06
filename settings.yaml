@@ -1,6 +1,0 @@
-max_vertical_offset: 0.25  # Maximum tolerable vertical separation as a multiplier of vertical size.
-max_horizontal_separation: 2.0  # Maximum horizontal separation as a multiplier of box width.
-expected_annotations:
-  - AO
-  - TRANS
-  - LIVER
