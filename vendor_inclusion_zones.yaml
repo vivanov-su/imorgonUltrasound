@@ -1,12 +1,10 @@
 # Rectangular regions where human written text is likely
 # [top left x, top left y, bottom right x, bottom right y]
 Philips:
-  - [10, 55, 55, 90]
   - [0, 700, 870, 770]
   - [100, 100, 400, 350]
   - [580, 190, 780, 350]
 Siemens:
-  - [101, 551, 551, 901]
   - [0, 600, 500, 700]
 LOGIQ:
   - [0, 800, 1000, 970]
