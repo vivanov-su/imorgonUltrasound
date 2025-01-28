@@ -1,8 +1,21 @@
 # Rectangular regions where human written text is likely
 # [top left x, top left y, bottom right x, bottom right y]
-philips:
-  - [0, 1, 2, 3]
+Philips:
   - [10, 55, 55, 90]
-siemens:
-  - [10, 11, 21, 31]
+  - [0, 700, 870, 770]
+  - [100, 100, 400, 350]
+  - [580, 190, 780, 350]
+Siemens:
   - [101, 551, 551, 901]
+  - [0, 600, 500, 700]
+LOGIQ:
+  - [0, 800, 1000, 970]
+  - [1000, 0, 1350, 820]
+  - [0, 80, 130, 250]
+  - [0, 700, 990, 820]
+Orange:
+  - [0, 400, 640, 440]
+Sequoia:
+  - [0, 0, 150, 150]
+Unknown:
+  - [0, 800, 1200, 960] 
