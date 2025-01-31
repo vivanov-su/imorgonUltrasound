@@ -25,21 +25,28 @@ def is_within_tolerances(center_a, center_b, width_a, height_a):
     return (vertical_distance <= height_a * MAX_VERTICAL_OFFSET and 
             horizontal_distance <= width_a * MAX_HORIZONTAL_SEPARATION)
 
-def post_process(ocr_result, valid_annotation_keywords_dict):
+def post_process(ocr_results, valid_annotation_keywords_dict, ocr_settings_dict):
+    if ocr_results is None:
+        return []
+
     valid_keywords = valid_annotation_keywords_dict.get("valid_annotation_keywords", None)
+    require_valid_keyword = ocr_settings_dict.get("require_valid_keyword", False)
+
     merged_results = []
     used_indices = set()
     
-    for i, item in enumerate(ocr_result):
+    for i, item in enumerate(ocr_results):
         if i in used_indices:
             continue
 
         # Unpack the OCR result box and text with confidence
         box_i, text_i, confidence_i = item
 
-        # Check if detected text contains any valid keywords
-        if not any(keyword in text_i.upper() for keyword in valid_keywords):
-            continue  # Skip this box if it doesn't match any valid keywords
+        # Skip filtering if the setting is enabled
+        if not require_valid_keyword:
+            # Check if detected text contains any valid keywords
+            if not any(keyword in text_i.upper() for keyword in valid_keywords):
+                continue  # Skip this box if it doesn't match any valid keywords
 
         center_i = compute_center_of_mass(box_i)
         width_i, height_i = compute_bounding_box_dimensions(box_i)
@@ -48,15 +55,17 @@ def post_process(ocr_result, valid_annotation_keywords_dict):
         min_confidence = confidence_i
         merge_needed = False
         
-        for j in range(i + 1, len(ocr_result)):
+        for j in range(i + 1, len(ocr_results)):
             if j in used_indices:
                 continue
             
-            box_j, text_j, confidence_j = ocr_result[j]
+            box_j, text_j, confidence_j = ocr_results[j]
 
-            # Check if the text of the other box contains any valid keywords
-            if not any(keyword in text_j.upper() for keyword in valid_keywords):
-                continue  # Skip this box if it doesn't match any valid keywords
+            # Skip filtering if the setting is enabled
+            if not require_valid_keyword:
+                # Check if the text of the other box contains any valid keywords
+                if not any(keyword in text_j.upper() for keyword in valid_keywords):
+                    continue  # Skip this box if it doesn't match any valid keywords
 
             center_j = compute_center_of_mass(box_j)
             
@@ -75,4 +84,7 @@ def post_process(ocr_result, valid_annotation_keywords_dict):
             # Append as is
             merged_results.append((box_i, (text_i, confidence_i)))
 
-    return merged_results
+    # Extract only the readable text portion from all merged results
+    readable_results = [line[1][0] for line in merged_results]
+
+    return readable_results
