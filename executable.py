@@ -35,11 +35,7 @@ def process_ultrasound_scans(input_directory_str, output_directory_str, valid_an
             # 4) Collect results into an output
             ocr_results[filename] = clean_results
 
-    # Save output to file
-    output_file_path = os.path.join(output_directory_str, "ocr_results.yaml")
-    with open(output_file_path, "w") as output_file:
-        yaml.dump(ocr_results, output_file, default_flow_style=False)
-        print(f"### OCR results written to {output_file_path}")
+    return ocr_results
 
 if __name__ == "__main__":
     """
@@ -61,3 +57,9 @@ if __name__ == "__main__":
     ocr_settings = load_yaml_config("ocr_settings.yaml")
 
     process_ultrasound_scans(input_directory, output_directory, valid_annotation_keywords, vendor_inclusion_zones, ocr_settings)
+    
+    # Save output to file
+    output_file_path = os.path.join(output_directory_str, "ocr_results.yaml")
+    with open(output_file_path, "w") as output_file:
+        yaml.dump(ocr_results, output_file, default_flow_style=False)
+        print(f"### OCR results written to {output_file_path}")

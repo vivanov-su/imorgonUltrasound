@@ -24,6 +24,9 @@ class OCREngine:
         return result
 
     def formatPaddleOCR(self, raw_output):
+        if (raw_output[0] is None):
+            return None
+        
         result = []
         for ocr_result in raw_output[0]:
             # Unpack the current element
