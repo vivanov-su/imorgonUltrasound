@@ -6,6 +6,9 @@ from PIL import ImageTk, Image
 from tkinter import filedialog
 import os
 import src.easyO, src.paddleO, src.rapidO, src.tess
+import yaml
+import cv2
+import numpy as np
 
 def openDirectory():
     folder_selection = filedialog.askdirectory(initialdir="C:/Users/gugul/Documents/School/Capstone/imgFolder")
@@ -21,7 +24,7 @@ def openAnalysisWindow():
     if not folder_path:
         return
 
-    image_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+    image_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff'))]
     
     if not image_files:
         return
@@ -39,20 +42,69 @@ def openAnalysisWindow():
     button_frame = Frame(multi_analysis_window)
     button_frame.pack()
 
-    current_index = [0]  
+    current_index = [0]
+
+    def get_image_size(image_path):
+    
+        try:
+            with Image.open(image_path) as img:
+                return img.size  
+        except Exception as e:
+            print(f"Error loading image {image_path}: {e}")
+            return None
 
     def update_image():
         try:
-            img = Image.open(image_files[current_index[0]])
-            img = img.resize((400, 400))
-            photo = ImageTk.PhotoImage(img)
-            img_label.config(image=photo)
-            img_label.image = photo
-            
-            analysis_output = f"Image {current_index[0] + 1} of {len(image_files)}\nFile Path: {image_files[current_index[0]]}\nFurther analysis results would be displayed here."
-            text_label.config(text=analysis_output)
+            folder_name = os.path.basename(folder_path)
+
+            yaml_file_path = os.path.join(os.getcwd(), "vendor_inclusion_zones.yaml")
+
+            if os.path.exists(yaml_file_path):
+                with open(yaml_file_path, 'r') as yaml_file:
+                    yaml_data = yaml.safe_load(yaml_file)
+
+                matched_brand = None
+                for brand in yaml_data:
+                    if brand == folder_name:  
+                        matched_brand = brand
+                        break
+
+                if matched_brand:
+                    img = Image.open(image_files[current_index[0]])
+                    img_cv = np.array(img)  
+                    img_cv = cv2.cvtColor(img_cv, cv2.COLOR_RGB2BGR) 
+
+                    original_size = get_image_size(image_files[current_index[0]])
+                    if original_size:
+                        width, height = original_size
+                        print(f"Original image size: {width}x{height}")
+
+                    for brand_info in yaml_data[matched_brand]:
+                        image_size = brand_info['image_size']
+                        if image_size == [width, height]: 
+                            boxes = brand_info['boxes']  
+                            for box in boxes:
+                                x_min, y_min, x_max, y_max = box
+                                cv2.rectangle(img_cv, (x_min, y_min), (x_max, y_max), (0, 0, 255), 2)  
+
+                            img_pil = Image.fromarray(cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB))
+                            img_pil = img_pil.resize((400, 400)) 
+                            photo = ImageTk.PhotoImage(img_pil)
+                            img_label.config(image=photo)
+                            img_label.image = photo
+
+                            analysis_output = f"Image {current_index[0] + 1} of {len(image_files)}\nFile Path: {image_files[current_index[0]]}\nFurther analysis results would be displayed here."
+                            text_label.config(text=analysis_output)
+                            return
+
+                    text_label.config(text="No matching size found for this image.")
+                else:
+                    text_label.config(text=f"No coordinates found for brand: {folder_name}")
+            else:
+                text_label.config(text="YAML file not found.")
         except Exception as e:
             text_label.config(text=f"Error loading image: {e}")
+
 
     def next_image():
         if current_index[0] < len(image_files) - 1:
@@ -78,7 +130,7 @@ def openGridView():
     if not folder_path:
         return
 
-    image_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+    image_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff'))]
     
     if not image_files:
         return
@@ -110,16 +162,63 @@ def openGridView():
         button_frame = Frame(single_view_window)
         button_frame.pack()
 
+        def get_image_size(image_path):
+            try:
+                with Image.open(image_path) as img:
+                    return img.size  
+            except Exception as e:
+                print(f"Error loading image {image_path}: {e}")
+                return None
+
         def update_image():
             try:
-                img = Image.open(image_files[current_index[0]])
-                img = img.resize((400, 400))
-                photo = ImageTk.PhotoImage(img)
-                img_label.config(image=photo)
-                img_label.image = photo
-                
-                analysis_output = f"Image {current_index[0] + 1} of {len(image_files)}\nFile Path: {image_files[current_index[0]]}\nFurther analysis results would be displayed here."
-                text_label.config(text=analysis_output)
+                folder_name = os.path.basename(folder_path)
+
+                yaml_file_path = os.path.join(os.getcwd(), "vendor_inclusion_zones.yaml")
+
+                if os.path.exists(yaml_file_path):
+                    with open(yaml_file_path, 'r') as yaml_file:
+                        yaml_data = yaml.safe_load(yaml_file)
+
+                    matched_brand = None
+                    for brand in yaml_data:
+                        if brand == folder_name:  
+                            matched_brand = brand
+                            break
+
+                    if matched_brand:
+                        img = Image.open(image_files[current_index[0]])
+                        img_cv = np.array(img)  
+                        img_cv = cv2.cvtColor(img_cv, cv2.COLOR_RGB2BGR) 
+
+                        original_size = get_image_size(image_files[current_index[0]])
+                        if original_size:
+                            width, height = original_size
+                            print(f"Original image size: {width}x{height}")
+
+                        for brand_info in yaml_data[matched_brand]:
+                            image_size = brand_info['image_size']
+                            if image_size == [width, height]: 
+                                boxes = brand_info['boxes']  
+                                for box in boxes:
+                                    x_min, y_min, x_max, y_max = box
+                                    cv2.rectangle(img_cv, (x_min, y_min), (x_max, y_max), (0, 0, 255), 2)  
+
+                                img_pil = Image.fromarray(cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB))
+                                img_pil = img_pil.resize((400, 400)) 
+                                photo = ImageTk.PhotoImage(img_pil)
+                                img_label.config(image=photo)
+                                img_label.image = photo
+
+                                analysis_output = f"Image {current_index[0] + 1} of {len(image_files)}\nFile Path: {image_files[current_index[0]]}\nFurther analysis results would be displayed here."
+                                text_label.config(text=analysis_output)
+                                return
+
+                        text_label.config(text="No matching size found for this image.")
+                    else:
+                        text_label.config(text=f"No coordinates found for brand: {folder_name}")
+                else:
+                    text_label.config(text="YAML file not found.")
             except Exception as e:
                 text_label.config(text=f"Error loading image: {e}")
 
@@ -208,9 +307,9 @@ button_Frame.grid(row = 4, column = 1, sticky=NSEW)
 imageDesc_Frame.columnconfigure(0, weight=1)
 imageDesc_Frame.columnconfigure(1, weight=1)
 imageDesc_Frame.columnconfigure(2, weight=1)
-logo = ImageTk.PhotoImage(Image.open("misc/logo.png"))
-logo_label = Label(imageDesc_Frame, image=logo)
-logo_label.grid(row = 0, column = 1, pady = (10, 5))
+# logo = ImageTk.PhotoImage(Image.open("misc/logo.png"))
+# logo_label = Label(imageDesc_Frame, image=logo)
+# logo_label.grid(row = 0, column = 1, pady = (10, 5))
 T = Text(imageDesc_Frame, height = 5, width = 30, wrap = WORD)
 T.tag_configure("tag_name", justify='center')
 desc = "Welcome to iMorgon's ultrasound annotation extraction program."
