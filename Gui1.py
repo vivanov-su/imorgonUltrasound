@@ -5,10 +5,10 @@ import tkinter.messagebox
 from PIL import ImageTk, Image
 from tkinter import filedialog
 import os
-import src.easyO, src.paddleO, src.rapidO, src.tess
 import yaml
 import cv2
 import numpy as np
+from executable import process_ultrasound_scans, load_yaml_config  # Importing the required functions
 
 def openDirectory():
     folder_selection = filedialog.askdirectory(initialdir="C:/Users/gugul/Documents/School/Capstone/imgFolder")
@@ -267,17 +267,48 @@ def analyze_images(*args):
         openGridView()
 
 def extract():
-    if (pathVar.get() == "" or pathVar2.get() == ""):
+    # Collect input/output folder paths
+    input_dir = pathVar.get()
+    output_dir = pathVar2.get()
+
+    if (output_dir == "" or output_dir == ""):
         tkinter.messagebox.showinfo("Error", "Please select an import/export directory.")
         return
-    if (modelDrop.get() == "EasyOCR"):
-        src.easyO.printUsage(pathVar.get(), pathVar2.get())
-    elif (modelDrop.get() == "RapidOCR"):
-        src.rapidO.printUsage(pathVar.get(), pathVar2.get())
-    elif (modelDrop.get() == "PaddleOCR"):
-        src.paddleO.printUsage(pathVar.get(), pathVar2.get())
-    elif (modelDrop.get() == "Tesseract"):
-        src.tess.printUsage(pathVar.get(), pathVar2.get())
+    
+    print("Import Directory: " + input_dir)
+    print("Export Directory: " + output_dir)
+
+    # Collect OCR settings from GUI options
+    ocr_settings = {
+        "ocr_engine": modelDrop.get(),
+        "require_valid_keyword": False, # TODO: add buttons for these
+        "use_inclusion_zones": False,
+    }
+
+    try:
+        # Load required configuration files
+        valid_annotation_keywords = load_yaml_config("valid_annotation_keywords.yaml")
+        vendor_inclusion_zones = load_yaml_config("vendor_inclusion_zones.yaml")
+
+        # Process the ultrasound scan images
+        ocr_results = process_ultrasound_scans(
+            input_directory_str=input_dir,
+            valid_annotation_keywords_dict=valid_annotation_keywords,
+            vendor_specific_zones_dict=vendor_inclusion_zones,
+            ocr_settings_dict=ocr_settings,
+        )
+
+        print("OCR processing completed successfully!")
+
+        # Save output to file
+        output_file_path = os.path.join(output_dir, "ocr_results.yaml")
+        with open(output_file_path, "w") as output_file:
+            yaml.dump(ocr_results, output_file, default_flow_style=False)
+            print(f"### OCR results written to {output_file_path}")
+
+    except Exception as e:
+        tkinter.messagebox.showerror("Error", f"An error occurred during processing:\n{e}")
+
 
 root = Tk()
 root.title("iMorgon Annotation Extraction")
@@ -323,7 +354,7 @@ dropDown_Frame.columnconfigure(1, weight=1)
 dropDown_Frame.columnconfigure(2, weight=1)
 modelFrame = LabelFrame(dropDown_Frame,text="Models")
 modelFrame.grid(row = 0, column = 1, pady = 5)
-models = ["EasyOCR", "RapidOCR", "PaddleOCR", "Tesseract"]
+models = ["EasyOCR", "RapidOCR", "PaddleOCR", "DocTR", "Tesseract"]
 modelDrop = ttk.Combobox(modelFrame, value=models)
 modelDrop.current(0)
 modelDrop.grid(row=0, pady = 5)

@@ -7,7 +7,7 @@ from src.box_merger import post_process
 from src.image_redactor import apply_vendor_specific_zones
 from PIL import Image
 
-def process_ultrasound_scans(input_directory_str, output_directory_str, valid_annotation_keywords_dict, vendor_specific_zones_dict, ocr_settings_dict):
+def process_ultrasound_scans(input_directory_str, valid_annotation_keywords_dict, vendor_specific_zones_dict, ocr_settings_dict):
     """
     Main program callpoint.
     Processes all image files in a given directory, and saves the results to a YAML file.
@@ -17,7 +17,7 @@ def process_ultrasound_scans(input_directory_str, output_directory_str, valid_an
     engine = OCREngine(ocr_settings_dict)
 
     # Iterate over all files inside the input directory and process them if they are images
-    ocr_results = {}
+    directory_result = {}
     for filename in os.listdir(input_directory_str):
         if filename.lower().endswith((".png", ".jpg", ".jpeg", ".tiff", ".gif")):            
             print(f"Processing image: {filename}")
@@ -32,10 +32,10 @@ def process_ultrasound_scans(input_directory_str, output_directory_str, valid_an
             # 3) Clean up artifacts, spellcheck detected words, and format the OCR data 
             clean_results = post_process(results, valid_annotation_keywords_dict, ocr_settings_dict)
 
-            # 4) Collect results into an output
-            ocr_results[filename] = clean_results
+            # 4) Attach the results to the file's name
+            directory_result[filename] = clean_results
 
-    return ocr_results
+    return directory_result
 
 if __name__ == "__main__":
     """
@@ -52,14 +52,16 @@ if __name__ == "__main__":
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
+    # Load required config files
     valid_annotation_keywords = load_yaml_config("valid_annotation_keywords.yaml")
     vendor_inclusion_zones = load_yaml_config("vendor_inclusion_zones.yaml")
     ocr_settings = load_yaml_config("ocr_settings.yaml")
 
-    process_ultrasound_scans(input_directory, output_directory, valid_annotation_keywords, vendor_inclusion_zones, ocr_settings)
+    # Run the extraction program. Returns a dictionary of filenames to a list of their keywords 
+    ocr_results = process_ultrasound_scans(input_directory, valid_annotation_keywords, vendor_inclusion_zones, ocr_settings)
     
     # Save output to file
-    output_file_path = os.path.join(output_directory_str, "ocr_results.yaml")
+    output_file_path = os.path.join(output_directory, "ocr_results.yaml")
     with open(output_file_path, "w") as output_file:
         yaml.dump(ocr_results, output_file, default_flow_style=False)
         print(f"### OCR results written to {output_file_path}")

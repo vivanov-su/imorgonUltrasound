@@ -1,3 +1,3 @@
-ocr_engine: RapidOCR  # Options: "RapidOCR" or "PaddleOCR"
+ocr_engine: RapidOCR  # Options: RapidOCR, PaddleOCR, EasyOCR, DocTR, Tesseract
 require_valid_keyword: True  # Whether detected text must contain at least one valid annotation keyword in order to be processed & outputted
 use_inclusion_zones: True  # Whether to black out all pixels outside of the specified regions
