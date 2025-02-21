@@ -15,7 +15,7 @@ class OCREngine:
         print(f"### Using OCR engine: {self.ocr_engine_choice}")
 
         if self.ocr_engine_choice == "RapidOCR": self.engine = RapidOCR()
-        elif self.ocr_engine_choice == "PaddleOCR": self.engine = PaddleOCR(use_angle_cls=True, lang="en")
+        elif self.ocr_engine_choice == "PaddleOCR": self.engine = PaddleOCR(use_angle_cls=True, use_gpu=False, lang="en")
         elif self.ocr_engine_choice == "EasyOCR": self.engine = Reader(["en"], gpu=False, detector = "dbnet18")
         elif self.ocr_engine_choice == "DocTR": self.engine = ocr_predictor(det_arch="db_resnet50", reco_arch="crnn_vgg16_bn", pretrained=True)
         elif self.ocr_engine_choice == "Tesseract": self.engine = pytesseract

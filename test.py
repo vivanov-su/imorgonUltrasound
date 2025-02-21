@@ -1,153 +1,85 @@
 import os
-import time
-import subprocess
+import sys
 import yaml
+from executable import process_ultrasound_scans
+from src.config_loader import load_yaml_config
 
-def calculate_differences(output_keywords, expected_keywords):
-    """
-    Calculate missing and additional keywords for a single file.
-    """
-    missing_keywords = [kw for kw in expected_keywords if kw not in output_keywords]
-    additional_keywords = [kw for kw in output_keywords if kw not in expected_keywords]
-    return missing_keywords, additional_keywords
 
-def compare_outputs(output_dir, results_dir, vendor_dir):
-    """
-    Compare the OCR results for a vendor and report differences.
-    """
-    output_file_path = os.path.join(output_dir, vendor_dir, "ocr_results.yaml")
-    expected_file_path = os.path.join(results_dir, vendor_dir, "ocr_results.yaml")
+def compute_metrics(ocr_results_dict, true_results_dict):
+    engine_performance = {
+        "photos": {},
+        "avg_true_positives_percent": 0.0,
+        "avg_false_positives_count": 0.0
+    }
 
-    # Check if required files exist
-    if not os.path.exists(output_file_path):
-        print(f"[ERROR] OCR output file missing for {vendor_dir}. Skipping...")
-        return []
+    total_true_positive_percent = 0.0
+    total_false_positives = 0
+    num_images = len(true_results_dict)
 
-    if not os.path.exists(expected_file_path):
-        print(f"[ERROR] Expected results file missing for {vendor_dir}. Skipping...")
-        return []
+    for filename, true_keywords in true_results_dict.items():
+        ocr_keywords = set(ocr_results_dict.get(filename, []))
 
-    # Load data
-    with open(output_file_path, 'r') as f:
-        output_data = yaml.safe_load(f)
-    with open(expected_file_path, 'r') as f:
-        expected_data = yaml.safe_load(f)
+        # Calculate true positives
+        true_keywords_set = set(true_keywords)
+        true_positives = ocr_keywords & true_keywords_set
+        false_positives = ocr_keywords - true_keywords_set
 
-    # Calculate differences
-    total_expected, total_missing = 0, 0
-    differences = []
+        true_positive_percent = len(true_positives) / len(true_keywords_set) if true_keywords_set else 1.0
+        false_positives_count = len(false_positives)
 
-    for file_name, output_keywords in output_data.items():
-        expected_keywords = expected_data.get(file_name, [])
-        missing, additional = calculate_differences(output_keywords, expected_keywords)
+        engine_performance["photos"][filename] = {
+            "keywords": list(ocr_keywords),
+            "true_positives_percent": round(true_positive_percent, 2),
+            "false_positives_count": false_positives_count
+        }
 
-        # Gather stats
-        total_expected += len(expected_keywords)
-        total_missing += len(missing)
+        total_true_positive_percent += true_positive_percent
+        total_false_positives += false_positives_count
 
-        if missing or additional:
-            differences.append({
-                "file": file_name,
-                "missing": missing,
-                "additional": additional
-            })
+    # Calculate overall averages
+    engine_performance["avg_true_positives_percent"] = round(total_true_positive_percent / num_images, 2)
+    engine_performance["avg_false_positives_count"] = total_false_positives / num_images
 
-    # Report differences
-    for diff in differences:
-        print(f"[{vendor_dir}] {diff['file']}:")
-        if diff["missing"]:
-            percentage_missing = (len(diff["missing"]) / len(expected_data.get(diff["file"], []))) * 100 if expected_data.get(diff["file"]) else 0
-            print(f"  - Missing ({percentage_missing:.2f}%): {', '.join(diff['missing'])}")
-        if diff["additional"]:
-            print(f"  - Additional: {', '.join(diff['additional'])}")
+    return engine_performance
 
-    # Print overall summary for vendor
-    if total_expected > 0:
-        overall_missing_percentage = (total_missing / total_expected) * 100
-        print(f"[{vendor_dir}] Overall miss percentage: {overall_missing_percentage:.2f}%\n")
-    else:
-        print(f"[{vendor_dir}] No expected keywords to compare.\n")
-
-    return differences
-
-def run_tests():
-    """
-    Main function to run all tests across vendors.
-    """
-    # Define paths
-    test_cases_dir = "./testing/test_images"
-    output_dir = "./testing/ocr_output"
-    results_dir = "./testing/true_results"
-    valid_keywords_path = "./valid_annotation_keywords.yaml"
-    inclusion_zones_path = "./vendor_inclusion_zones.yaml"
-
-    # Ensure output directory exists
-    os.makedirs(output_dir, exist_ok=True)
-
-    # Get vendor directories
-    vendor_dirs = sorted(
-        d for d in os.listdir(test_cases_dir) if os.path.isdir(os.path.join(test_cases_dir, d))
-    )
-    if not vendor_dirs:
-        print("[INFO] No vendor directories found. Exiting.")
-        return
-
-    total_time, total_images, all_differences = 0, 0, []
-
-    for vendor_dir in vendor_dirs:
-        print(f"[INFO] Running test case for {vendor_dir}...")
-
-        # Paths for vendor-specific input and output
-        input_dir = os.path.join(test_cases_dir, vendor_dir)
-        vendor_output_dir = os.path.join(output_dir, vendor_dir)
-        os.makedirs(vendor_output_dir, exist_ok=True)
-
-        # Count images
-        image_files = [f for f in os.listdir(input_dir) if f.lower().endswith((".png", ".jpg", ".jpeg", ".tiff", ".gif"))]
-        num_images = len(image_files)
-
-        if num_images == 0:
-            print(f"[WARNING] No images found for {vendor_dir}. Skipping...\n")
-            continue
-
-        # Run OCR processing
-        start_time = time.time()
-        subprocess.run(
-            ["python", "executable.py", input_dir, vendor_output_dir],
-            stdout = subprocess.DEVNULL
-        )
-        elapsed_time = time.time() - start_time
-
-        # print(f"[INFO] Processed  in {elapsed_time:.2f} seconds.")
-        print(f"{num_images} images, average time: {elapsed_time / num_images:.2f} seconds/image\n")
-
-        # Update aggregate metrics
-        total_time += elapsed_time
-        total_images += num_images
-
-        # Compare results and track differences
-        differences = compare_outputs(output_dir, results_dir, vendor_dir)
-        all_differences.extend(differences)
-
-    # Print test summary
-    print("\n[INFO] All test cases completed.")
-    if total_images > 0:
-        print(f"Total images processed: {total_images}")
-        print(f"Total time taken: {total_time:.2f} seconds")
-        print(f"Average processing time per image: {total_time / total_images:.2f} seconds/image")
-    else:
-        print("[INFO] No images were processed.")
-
-    if all_differences:
-        print("\n[INFO] Summary of differences:")
-        for diff in all_differences:
-            print(f"{diff['file']}:")
-            if diff["missing"]:
-                print(f"  - Missing: {', '.join(diff['missing'])}")
-            if diff["additional"]:
-                print(f"  - Additional: {', '.join(diff['additional'])}")
-    else:
-        print("[INFO] No differences found between outputs and expected results.")
 
 if __name__ == "__main__":
-    run_tests()
+    # Step 1: Get input and output paths
+    if len(sys.argv) != 3:
+        # Incorrect number of arguments
+        print("Usage: python main.py <input_directory> <output_directory>")
+        sys.exit(1)
+
+    input_directory = sys.argv[1]
+    output_directory = sys.argv[2]
+    if not os.path.exists(output_directory):
+        os.makedirs(output_directory)
+
+    # Step 2: Load configuration
+    valid_annotation_keywords = load_yaml_config("valid_annotation_keywords.yaml")
+    vendor_inclusion_zones = load_yaml_config("vendor_inclusion_zones.yaml")
+    ocr_settings = load_yaml_config("ocr_settings.yaml")
+
+    true_results_yaml_path = os.path.join(input_directory, "true_results.yaml")
+    true_results = load_yaml_config(true_results_yaml_path)
+
+    # Step 3: Run each engine on the directory
+    performance_metrics = {}
+    ocr_engines = ["RapidOCR", "PaddleOCR", "EasyOCR", "DocTR", "Tesseract"]
+    for engine in ocr_engines:
+        # Step 3a: Configure OCR settings for the current engine
+        ocr_settings["ocr_engine"] = engine  # Update the engine dynamically
+
+        # Step 3b: Run the current engine
+        ocr_results = process_ultrasound_scans(
+            input_directory, valid_annotation_keywords, vendor_inclusion_zones, ocr_settings
+        )
+
+        # Step 3c: Calculate the metrics for engine's results
+        performance_metrics[engine] = compute_metrics(ocr_results, true_results)
+
+    # Step 4: Save metrics for all engines to the output directory
+    output_file_path = os.path.join(output_directory, "performance_metrics.yaml")
+    with open(output_file_path, "w") as output_file:
+        yaml.dump(performance_metrics, output_file, default_flow_style=False)
+        print(f"### Performance metrics (grouped by engine) saved to {output_file_path}")
