@@ -1,20 +1,21 @@
 import os
 import sys
 import yaml
+import time
 from executable import process_ultrasound_scans
 from src.config_loader import load_yaml_config
 
 
-def compute_metrics(ocr_results_dict, true_results_dict):
+def compute_metrics(ocr_results_dict, true_results_dict, time_taken, num_images):
     engine_performance = {
-        "photos": {},
+        "images": {},
         "avg_true_positives_percent": 0.0,
-        "avg_false_positives_count": 0.0
+        "avg_false_positives_count": 0.0,
+        "average_time_per_image": 0.0
     }
 
     total_true_positive_percent = 0.0
     total_false_positives = 0
-    num_images = len(true_results_dict)
 
     for filename, true_keywords in true_results_dict.items():
         ocr_keywords = set(ocr_results_dict.get(filename, []))
@@ -27,7 +28,7 @@ def compute_metrics(ocr_results_dict, true_results_dict):
         true_positive_percent = len(true_positives) / len(true_keywords_set) if true_keywords_set else 1.0
         false_positives_count = len(false_positives)
 
-        engine_performance["photos"][filename] = {
+        engine_performance["images"][filename] = {
             "keywords": list(ocr_keywords),
             "true_positives_percent": round(true_positive_percent, 2),
             "false_positives_count": false_positives_count
@@ -39,6 +40,7 @@ def compute_metrics(ocr_results_dict, true_results_dict):
     # Calculate overall averages
     engine_performance["avg_true_positives_percent"] = round(total_true_positive_percent / num_images, 2)
     engine_performance["avg_false_positives_count"] = total_false_positives / num_images
+    engine_performance["average_time_per_image"] = round(time_taken / num_images, 2)
 
     return engine_performance
 
@@ -70,13 +72,18 @@ if __name__ == "__main__":
         # Step 3a: Configure OCR settings for the current engine
         ocr_settings["ocr_engine"] = engine  # Update the engine dynamically
 
-        # Step 3b: Run the current engine
+        # Step 3b: Measure time and run the current engine
+        start_time = time.time()  # Start timing
         ocr_results = process_ultrasound_scans(
             input_directory, valid_annotation_keywords, vendor_inclusion_zones, ocr_settings
         )
+        end_time = time.time()  # End timing
+
+        time_taken = end_time - start_time  # Compute total time taken
+        num_images = len(true_results)
 
         # Step 3c: Calculate the metrics for engine's results
-        performance_metrics[engine] = compute_metrics(ocr_results, true_results)
+        performance_metrics[engine] = compute_metrics(ocr_results, true_results, time_taken, num_images)
 
     # Step 4: Save metrics for all engines to the output directory
     output_file_path = os.path.join(output_directory, "performance_metrics.yaml")
