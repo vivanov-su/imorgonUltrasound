@@ -22,7 +22,7 @@ def browse(pathVar):
     pathVar.set(folder_selection)
 
 def openAnalysisWindow():
-    ### Added test.py code (START)
+    ### Added test.py code (START) 
     folder_path = filedialog.askdirectory(title="Select a Folder Containing Images")
     imgFolderName = os.path.basename(folder_path)
 
@@ -35,7 +35,7 @@ def openAnalysisWindow():
 
     performance_metrics = {}
     try:
-        if f"{imgFolderName}_results.yaml" not in os.listdir("C:/dev/capstone/imorgonUltrasound/Export"):
+        if f"{imgFolderName}_results.yaml" not in os.listdir("C:/dev/capstone/imorgonUltrasound/Export"): ### change hard coded export directory
             for model in models:
                 print(f"Running OCR with model: {model}")
 
@@ -56,15 +56,15 @@ def openAnalysisWindow():
                 performance_metrics[model] = compute_metrics(ocr_results, true_results, time_taken, num_images)
 
             output_file_path = os.path.join(
-                "C:/dev/capstone/imorgonUltrasound/Export", f"{imgFolderName}_results.yaml"
+                "C:/dev/capstone/imorgonUltrasound/Export", f"{imgFolderName}_results.yaml"  ### change hard coded export directory
             )
             with open(output_file_path, "w") as output_file:
                 yaml.dump(performance_metrics, output_file, default_flow_style=False)   
-            ### Added test.py code (END)
 
     except Exception as e:
         print(f"Error during OCR processing: {e}")
-    
+    ### Added test.py code (END)
+
     if not folder_path:
         return
 
@@ -151,7 +151,7 @@ def openAnalysisWindow():
                             filename = os.path.basename(image_files[current_index[0]])
 
                             ### Display Stats on GUI Window (START)
-                            yaml_path = f"C:/dev/capstone/imorgonUltrasound/imgFolder/{imgFolderName}/true_results.yaml"
+                            yaml_path = f"C:/dev/capstone/imorgonUltrasound/imgFolder/{imgFolderName}/true_results.yaml" ### change hard coded import directory
                             with open(yaml_path, "r") as file:
                                 true_results = yaml.safe_load(file) 
 
