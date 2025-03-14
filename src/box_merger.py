@@ -14,17 +14,6 @@ def compute_bounding_box_dimensions(box):
     height = max(y_coords) - min(y_coords)
     return width, height
 
-def is_within_tolerances(center_a, center_b, width_a, height_a):
-    # Check if two boxes centers are within specified tolerances
-    MAX_VERTICAL_OFFSET = 0.25
-    MAX_HORIZONTAL_SEPARATION = 2.0
-    
-    vertical_distance = abs(center_a[1] - center_b[1])
-    horizontal_distance = abs(center_a[0] - center_b[0])
-    
-    return (vertical_distance <= height_a * MAX_VERTICAL_OFFSET and 
-            horizontal_distance <= width_a * MAX_HORIZONTAL_SEPARATION)
-
 def post_process(ocr_results, valid_annotation_keywords_dict, ocr_settings_dict):
     if ocr_results is None:
         return []
@@ -32,59 +21,32 @@ def post_process(ocr_results, valid_annotation_keywords_dict, ocr_settings_dict)
     valid_keywords = valid_annotation_keywords_dict.get("valid_annotation_keywords", None)
     require_valid_keyword = ocr_settings_dict.get("require_valid_keyword", False)
 
-    merged_results = []
-    used_indices = set()
+    processed_results = []
     
-    for i, item in enumerate(ocr_results):
-        if i in used_indices:
-            continue
-
+    for item in ocr_results:
         # Unpack the OCR result box and text with confidence
-        box_i, text_i, confidence_i = item
+        box, text, confidence = item
 
-        # Skip filtering if the setting is enabled
-        if not require_valid_keyword:
-            # Check if detected text contains any valid keywords
-            if not any(keyword in text_i.upper() for keyword in valid_keywords):
+        # If valid keywords are required, filter results based on the presence of valid keywords
+        if require_valid_keyword:
+            if not any(keyword in text.upper() for keyword in valid_keywords):
                 continue  # Skip this box if it doesn't match any valid keywords
 
-        center_i = compute_center_of_mass(box_i)
-        width_i, height_i = compute_bounding_box_dimensions(box_i)
+        # Split the detected text into individual words
+        words = text.split()
         
-        merged_text = text_i
-        min_confidence = confidence_i
-        merge_needed = False
-        
-        for j in range(i + 1, len(ocr_results)):
-            if j in used_indices:
-                continue
+        # Create a result entry for each word
+        for word in words:
+            if require_valid_keyword:
+                # Check if the word matches any valid keywords
+                if not any(keyword in word.upper() for keyword in valid_keywords):
+                    continue  # Skip this word if it doesn't match any valid keywords
             
-            box_j, text_j, confidence_j = ocr_results[j]
+            # Add the word and its associated box to the results
+            # NOTE: The box is still associated with the entire original sentence
+            processed_results.append((box, (word, confidence)))
 
-            # Skip filtering if the setting is enabled
-            if not require_valid_keyword:
-                # Check if the text of the other box contains any valid keywords
-                if not any(keyword in text_j.upper() for keyword in valid_keywords):
-                    continue  # Skip this box if it doesn't match any valid keywords
-
-            center_j = compute_center_of_mass(box_j)
-            
-            # Check if two boxes are close enough to merge based on tolerances
-            if is_within_tolerances(center_i, center_j, width_i, height_i):
-                # Merge the texts and update the confidence
-                merged_text += ' ' + text_j
-                min_confidence = min(min_confidence, confidence_j)
-                used_indices.add(j)
-                merge_needed = True
-        
-        if merge_needed:
-            # Append merged result
-            merged_results.append((box_i, (merged_text, min_confidence)))
-        else:
-            # Append as is
-            merged_results.append((box_i, (text_i, confidence_i)))
-
-    # Extract only the readable text portion from all merged results
-    readable_results = [line[1][0] for line in merged_results]
+    # Extract only the readable text portion from all processed results
+    readable_results = [item[1][0] for item in processed_results]
 
     return readable_results

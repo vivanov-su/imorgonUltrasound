@@ -1,0 +1,641 @@
+01001.tiff:
+- AO
+01001_1_1_1_1_1_1.tiff:
+- Aorta
+01001_1_1_1_1_1_1_1.tiff:
+- Aorta
+01002.jpeg:
+- RT
+- CCA
+- D
+01002.tiff:
+- AO
+01002_1.tiff: []
+01002_1_1_1.tiff:
+- SAG
+- PELVIS
+- ML
+01002_1_1_1_1_1_1.tiff:
+- IVC
+01002_1_1_1_1_1_1_1_1_1.tiff:
+- PANC
+- TR
+01003.jpeg:
+- RT
+- CCA
+- P
+- R
+- Prox
+- CCA
+- PSV
+- '71.2'
+- cm/s
+- EDV
+- '21.2'
+- cm/s
+- RI
+- '0.70'
+01004.jpeg:
+- LVIER
+- LHV
+01005.jpeg:
+- RT
+- BULB
+- RT
+- CCA
+- D
+010050.jpeg:
+- LIVER
+- LPV
+01005_1_1_1_1_1_1_1_1_1_1.tiff:
+- AO
+- LO
+- M
+- Dist
+- '1.04'
+- cm
+01006.jpeg:
+- RT
+- CCA
+- P
+- R
+- Dist
+- CCA
+- PSV
+- '-80.8'
+- cm/s
+- EDV
+- '-30.1'
+- cm/s
+- RI
+- '0.63'
+01006_1_1_1_1.tiff:
+- Trans
+- Pancreas
+01007.jpeg:
+- RT
+- ECA
+- RT
+- BULB
+01008.tiff:
+- Livr
+- Lesion
+- '1'
+- L
+- '0.8'
+- cm
+- Livr
+- Lesion
+- '1'
+- H
+- '0.8'
+- cm
+- Liver
+- Long
+01008_1_1_1.tiff:
+- Trans
+- Pancreas
+- BODY
+- TAIL
+01009.jpeg:
+- RT
+- ECA
+- R
+- Prox
+- ECA
+- PSV
+- '-65.4'
+- cm/s
+- EDV
+- '-21.2'
+- cm/s
+- RI
+- '0.68'
+01009_1_1.tiff:
+- SAG
+- PELVIS
+- ML
+- TO
+- LT
+01010.tiff:
+- PANC
+01010_1_1_1_1.tiff:
+- CBD
+- DISTL
+- Supine
+01011.jpeg:
+- RT
+- ICA
+- ORIGIN
+- RT
+- BULB
+01011_1_1_1.tiff:
+- CBD
+- '0.5'
+- cm
+- CBD
+- DISTL
+- Supine
+01011_1_1_1_1_1_1_1_1_1_1.tiff:
+- LIV
+- LT
+- TR
+01011_1_1_1_1_1_1_1_1_1_1_0.tiff:
+- LIV
+- LT
+- TR
+01012.jpeg:
+- RT
+- ICA
+- ORIGIN
+- R
+- Prox
+- ICA
+- PSV
+- '-69.3'
+- cm/s
+- EDV
+- '-32.1'
+- cm/s
+- RI
+- '0.54'
+01013.tiff:
+- Dist
+- '0.468'
+- cm
+- PANC
+01014.jpeg:
+- RT
+- ICA
+- P
+- R
+- Prox
+- ICA
+- PSV
+- '-80.2'
+- cm/s
+- EDV
+- '-34.0'
+- cm/s
+- RI
+- '0.58'
+01014_1_1_1_1_1_1_1_1.tiff:
+- LIV
+- LT
+- BD
+01015.jpeg:
+- RT
+- ICA
+- D
+01015_1_1.tiff:
+- Uterus
+- Length
+- '3.32'
+- cm
+- Uterus
+- Height
+- '1.48'
+- cm
+- SAG
+- UT
+- ML
+01015_1_1_1.tiff:
+- CBD
+- DISTL
+- Supine
+01017.jpeg:
+- RT
+- ICA
+- D
+- R
+- Dist
+- ICA
+- PSV
+- '-82.7'
+- cm/s
+- EDV
+- '-42.3'
+- cm/s
+- RI
+- '0.49'
+01017.tiff:
+- Liver
+- Long
+01017_1_1.tiff:
+- Uterus
+- Width
+- '2.68'
+- cm
+- TRV
+- UT
+01018.jpeg:
+- RT
+- ICA
+- D
+- R
+- Dist
+- ICA
+- PSV
+- '-85.9'
+- cm/s
+- EDV
+- '-51.9'
+- cm/s
+- RI
+- '0.40'
+01019.jpeg:
+- RT
+- VERT
+01021.jpeg:
+- RT
+- VERT
+- R
+- Vertebral
+- A
+- PSV
+- '-47.5'
+- cm/s
+- EDV
+- '-15.4'
+- cm/s
+- RI
+- '0.68'
+01022.jpeg:
+- RT
+- BULB
+01022_1_1_1_1_1_1_1_1_1_1.tiff:
+- MPV
+01023_1_1_1_1_1_1_1_1_1_1.tiff:
+- MPV
+- Vel
+- '20.5'
+- cm/s
+01024.jpeg:
+- RT
+- BIF
+- ICA
+- ECA
+01026.jpeg:
+- LT
+- CCA
+- D
+01026_1_1_1.tiff:
+- Long
+- Left
+- Liver
+01027.jpeg:
+- LT
+- CCA
+- P
+- L
+- Prox
+- CCA
+- PSV
+- '80.2'
+- cm/s
+- EDV
+- '23.1'
+- cm/s
+- RI
+- '0.71'
+01027_1_1.tiff:
+- SAG
+- UT
+- ML
+- TO
+- RT
+01028_1.tiff:
+- Livr
+- Lesion
+- '2'
+- W
+- '0.9'
+- cm
+- Liver
+- Trans
+01028_1_1_1_1.tiff:
+- Long
+- Left
+- Liver
+01028_1_1_1_1_1_1_1_1_1_1.tiff:
+- BD
+- INTRAHEP
+- RT
+01029.jpeg:
+- LT
+- BULB
+- LT
+- CCA
+- D
+01029_1_1.tiff:
+- SAG
+- RT
+- ADNEXA
+01030.jpeg:
+- LT
+- CCA
+- D
+- L
+- Dist
+- CCA
+- PSV
+- '-83.4'
+- cm/s
+- EDV
+- '-28.2'
+- cm/s
+- RI
+- '0.66'
+01031.jpeg:
+- LT
+- ECA
+- LT
+- BULB
+01031_1_1_1_1.tiff:
+- Long
+- Right
+- Liver
+- SUBCOSTAL
+01031_1_1_1_1_1_1_1_1.tiff:
+- BD
+- INTRAHEP
+- RT
+- TR
+01032_1_1_1_1.tiff:
+- Long
+- Right
+- Liver
+- SUBCOSTAL
+01033.jpeg:
+- LT
+- ECA
+- L
+- Prox
+- ECA
+- PSV
+- '-47.7'
+- cm/s
+- EDV
+- '-10.7'
+- cm/s
+- RI
+- '0.77'
+01033_1_1_1_1.tiff:
+- Long
+- Right
+- Liver
+- SUBCOSTAL
+01034.jpeg:
+- LT
+- ICA
+- ORIGIN
+- LT
+- BULB
+01035.jpeg:
+- LT
+- ICA
+- ORIGIN
+- LT
+- BULB
+01035.tiff:
+- Liver
+- Long
+01035_1_1_1.tiff:
+- Long
+- Right
+- Liver
+- INTERCOSTAL
+01036.jpeg:
+- LT
+- ICA
+- ORIGIN
+- L
+- Prox
+- ICA
+- PSV
+- '-63.2'
+- cm/s
+- EDV
+- '-23.6'
+- cm/s
+- RI
+- '0.63'
+01036_1_1.tiff:
+- Sag
+- Lt
+- Adnexa
+01038.jpeg:
+- LT
+- ICA
+- P
+01038.tiff:
+- LIVER
+- MHV
+01038_1.tiff:
+- Livr
+- Lesion
+- '3'
+- W
+- '1.4'
+- cm
+- Liver
+- Trans
+01039.jpeg:
+- LT
+- ICA
+- P
+- L
+- Prox
+- ICA
+- PSV
+- '-64.5'
+- cm/s
+- EDV
+- '-32.7'
+- cm/s
+- RI
+- '0.49'
+01040.jpeg:
+- LT
+- ICA
+- L
+- Mid
+- ICA
+- PSV
+- '-88.5'
+- cm/s
+- EDV
+- '-30.1'
+- cm/s
+- RI
+- '0.66'
+01041.jpeg:
+- LT
+- ICA
+- D
+01043.jpeg:
+- LT
+- ICA
+- D
+- L
+- Dist
+- ICA
+- PSV
+- '-81.5'
+- cm/s
+- EDV
+- '-37.9'
+- cm/s
+- RI
+- '0.54'
+01043_1_1_1.tiff:
+- R
+- Ov
+- Length
+- '0.49'
+- cm
+- R
+- Ov
+- Height
+- '0.80'
+- cm
+- Sag
+- Rt
+- Ovary
+01045.jpeg:
+- LT
+- ICA
+- D
+- L
+- Dist
+- ICA
+- PSV
+- '-94.9'
+- cm/s
+- EDV
+- '-36.6'
+- cm/s
+- RI
+- '0.61'
+01047_1_1.tiff:
+- L
+- Ov
+- Width
+- '0.95'
+- cm
+- Trans
+- Lt
+- Ovary
+01049_1.tiff:
+- RT
+- Renal
+- Length
+- '9.8'
+- cm
+- Liver
+- RK
+- Long
+01050.jpeg:
+- LT
+- VERT
+- L
+- Vertebral
+- A
+- PSV
+- '-55.1'
+- cm/s
+- EDV
+- '-21.2'
+- cm/s
+- RI
+- '0.62'
+01052.tiff: []
+01052_1_1.tiff:
+- Trans
+- Left
+- Liver
+01059_1_1.tiff:
+- Trans
+- Right
+- Liver
+- SUBCOSTAL
+01062_1_1.tiff:
+- Trans
+- Right
+- Liver
+- INTERCOSTAL
+01067_1_1.tiff:
+- Trans
+- Right
+- Liver
+01068_1_1.tiff:
+- Long
+- Right
+- LIVER
+- '1'
+- INTERCOSTAL
+01070_1_1_1.tiff:
+- Livr
+- Lesion
+- '1'
+- L
+- '0.6'
+- cm
+- Livr
+- Lesion
+- '1'
+- H
+- '0.6'
+- cm
+- Long
+- Right
+- LIVER
+- '1'
+- INTERCOSTAL
+01071_1_1.tiff:
+- Long
+- Right
+- LIVER
+- '1'
+- INTERCOSTAL
+01082_1_1_1.tiff:
+- Livr
+- Lesion
+- '2'
+- W
+- '0.6'
+- cm
+- Trans
+- Right
+- LIVER
+- '2'
+- INTERCOSTAL
+01087_1_1_1.tiff:
+- Long
+- Right
+- Liver
+01088.tiff: []
+01092.tiff: []
+01095_1_1.tiff:
+- Long
+- GB
+- Supine
+- RIB
+01101_1_1.tiff:
+- Long
+- GB
+- Supine
+01119_1_1_1_1.tiff:
+- CBD
+- '0.6'
+- cm
+- CBD
+01133.tiff: []
+01150_1_1.tiff:
+- LLL
+01160.tiff:
+- LLL
+01168_1.tiff:
+- Long
+- Right
+- LIVER
