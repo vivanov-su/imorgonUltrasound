@@ -2,8 +2,7 @@ import os
 import numpy as np
 from PIL import Image
 
-def apply_vendor_specific_zones(image_PIL, input_directory_str, vendor_inclusion_zones_dict, ocr_settings_dict):
-    
+def apply_vendor_inclusion_zones(image_PIL, input_directory_str, vendor_inclusion_zones_dict, ocr_settings_dict):
     # Use folder name for the corresponding vendor
     folder_name = os.path.basename(os.path.normpath(input_directory_str))
     specific_vendor = vendor_inclusion_zones_dict.get(folder_name, None)

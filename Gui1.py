@@ -294,7 +294,7 @@ def extract():
         ocr_results = process_ultrasound_scans(
             input_directory_str=input_dir,
             valid_annotation_keywords_dict=valid_annotation_keywords,
-            vendor_specific_zones_dict=vendor_inclusion_zones,
+            vendor_inclusion_zones_dict_dict=vendor_inclusion_zones,
             ocr_settings_dict=ocr_settings,
         )
 

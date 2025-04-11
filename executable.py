@@ -4,10 +4,10 @@ import yaml
 from src.config_loader import load_yaml_config
 from src.ocr_engine import OCREngine
 from src.box_merger import post_process
-from src.image_redactor import apply_vendor_specific_zones
+from src.image_redactor import apply_vendor_inclusion_zones
 from PIL import Image
 
-def process_ultrasound_scans(input_directory_str, valid_annotation_keywords_dict, vendor_specific_zones_dict, ocr_settings_dict):
+def process_ultrasound_scans(input_directory_str, valid_annotation_keywords_dict, vendor_inclusion_zones_dict, ocr_settings_dict):
     """
     Main program callpoint.
     Processes all image files in a given directory, and saves the results to a YAML file.
@@ -24,7 +24,7 @@ def process_ultrasound_scans(input_directory_str, valid_annotation_keywords_dict
 
             # 1) Black out unneeded regions of the image
             with Image.open(os.path.join(input_directory_str, filename)) as image:
-                simplified_image = apply_vendor_specific_zones(image, input_directory_str, vendor_specific_zones_dict, ocr_settings_dict)
+                simplified_image = apply_vendor_inclusion_zones(image, input_directory_str, vendor_inclusion_zones_dict, ocr_settings_dict)
 
             # 2) Pass image through the OCR engine
             results = engine.run_ocr(simplified_image)
