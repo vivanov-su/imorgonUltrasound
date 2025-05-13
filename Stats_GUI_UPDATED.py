@@ -189,14 +189,6 @@ class ImageGallery:
 
 #   --------------------MISCELLANEOUS DEFINITIONS--------------------
 
-def optionCommand(event):
-    if(optionDrop.get() == "Statistics View" or "Comparison View"):
-        yamlSelect.grid(column = 1)
-    else:
-        yamlSelect.grid_remove()
-        y.grid_remove()
-        yamlFile.grid_remove()
-
 def openDirectory():
     folder_selection = filedialog.askdirectory(initialdir="C:/Users/gugul/Documents/School/Capstone/imgFolder")
     folderPath.set(folder_selection)
@@ -520,12 +512,14 @@ def openGridView():
 
 def analyze_images(*args):
     """Runs the correct function when dropdown selection changes."""
-    selected_mode = optionDrop.get()
-    #selected_mode = var.get()
-    if selected_mode == "Single View":
+    #selected_mode = optionDrop.get()
+    selected_mode = var.get()
+    if selected_mode == 1:
         openAnalysisWindow()
-    elif selected_mode == "Multiple Image View":
+    elif selected_mode == 2:
         openGridView()
+    elif selected_mode == 3:
+        openAnalysisWindow()
 
 def extract():
     # Collect input/output folder paths
@@ -657,6 +651,14 @@ option_Dropdown.columnconfigure(0, weight = 1)
 option_Dropdown.columnconfigure(1, weight = 1)
 option_Dropdown.columnconfigure(2, weight = 1)
 
+var = tk.IntVar()
+singleViewCheck = Checkbutton(option_Dropdown, text="Single Image View", variable= var, onvalue=1, offvalue=0)
+gridViewCheck = Checkbutton(option_Dropdown, text="Multiple Image View", variable=var, onvalue=2, offvalue=0)
+compareCheck = Checkbutton(option_Dropdown, text="Compare OCR Models", variable=var, onvalue=3, offvalue=0)
+singleViewCheck.grid(row = 0, column = 0, pady = 5)
+gridViewCheck.grid(row = 0, column=1, pady = 5)
+compareCheck.grid(row = 0, column = 2, pady = 5)
+
 imgSelect = tk.LabelFrame(option_Dropdown, text = "Select Image Folder")
 imgSelVar = tk.StringVar(imgSelect, "")
 imgSelect.grid(row = 1, column = 1, pady = 5)
@@ -669,6 +671,7 @@ yamlVar = tk.StringVar(yamlSelect, "")
 yamlSelect.grid(row = 2, column = 1, pady = 5)
 button_analyze = Button(option_Dropdown, text="Analyze Images", command = analyze_images)
 button_analyze.grid(row = 3, column = 1, pady=5)
+
 
 #BUTTON FRAME
 button_Frame.columnconfigure(0, weight=1)
