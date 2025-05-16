@@ -42,12 +42,8 @@ def openAnalysisWindow():
                 ocr_settings["ocr_engine"] = model
 
                 start_time = time.time()
-                ocr_results = process_ultrasound_scans(
-                    input_directory_str=folder_path,
-                    valid_annotation_keywords_dict=valid_annotation_keywords,
-                    vendor_specific_zones_dict=vendor_inclusion_zones,
-                    ocr_settings_dict=ocr_settings,
-                )
+                ocr_results = process_ultrasound_scans(folder_path, valid_annotation_keywords, vendor_inclusion_zones, ocr_settings)
+  
                 end_time = time.time() 
 
                 time_taken = end_time - start_time
@@ -133,6 +129,7 @@ def openAnalysisWindow():
                     original_size = get_image_size(image_files[current_index[0]])
                     if original_size:
                         width, height = original_size
+                        print(f"Original image size: {width}x{height}") 
 
                     for brand_info in yaml_data[matched_brand]:
                         image_size = brand_info['image_size']
@@ -156,7 +153,7 @@ def openAnalysisWindow():
                                 true_results = yaml.safe_load(file) 
 
                             exact_keywords = true_results.get(filename, [])
-                            analysis_output = f"Image {current_index[0] + 1} of {len(image_files)}\tFile Name: {filename}\t{(exact_keywords).join(', ') if exact_keywords else 'None'}"
+                            analysis_output = f"Image {current_index[0] + 1} of {len(image_files)}\tFile Name: {filename}\tExact Keywords: {', '.join(exact_keywords) if exact_keywords else 'None'}"
                             analysis_label.config(text=analysis_output)
 
                             imgFolder_result_path = os.path.join(os.getcwd(), f"Export/{imgFolderName}_results.yaml")
@@ -167,14 +164,26 @@ def openAnalysisWindow():
                                 if model in img_data:
                                     output_text = f"{model}\n"
                                     if "images" in img_data[model] and filename in img_data[model]["images"]:
-                                        keywords = img_data[model]["images"][filename].get("keywords", [])
-                                        keywords_str = ", ".join(keywords) if keywords else []
-                                        output_text += f"Extracted Keywords: {keywords_str}\n"
-                                    avg_time = img_data[model]["average_time_per_image"]
-                                    avg_false_pos = round(img_data[model]["avg_false_positives_count"], 3)
-                                    avg_pos_percent = img_data[model]["avg_true_positives_percent"]
-                                    output_text += f"Avg Time: {avg_time}\nAvg False Positive: {avg_false_pos}\nAvg Positive %: {avg_pos_percent}\n"
-                                    
+                                        # Original detected keywords
+                                        detected_keywords = img_data[model]["images"][filename].get("detected_keywords", [])
+                                        found_keywords = list(dict.fromkeys(detected_keywords))  
+
+                                        # Lowercase for comparison
+                                        lower_detected_keywords = [kw.lower() for kw in found_keywords]
+                                        lower_exact_keywords = [ek.lower() for ek in exact_keywords]
+
+                                        # Match keywords: preserve original casing but compare lowercased
+                                        match_detected_keywords = [
+                                            original_kw for original_kw, lower_kw in zip(found_keywords, lower_detected_keywords)
+                                            if any(ek in lower_kw for ek in lower_exact_keywords)
+                                        ]
+
+                                        match_keywords_str = ", ".join(match_detected_keywords) if match_detected_keywords else "None"
+
+                                        # output_text += f"OCR Detected Keywords: {found_keywords_str}\n"
+                                        avg_time = img_data[model]["average_time_per_image"]
+                                        output_text += f"{match_keywords_str}\n"
+                                        output_text += f"Avg Time: {avg_time}"
                                     model_labels[model].config(text=output_text)
         except Exception as e:
             for model in models:
@@ -201,6 +210,7 @@ def openAnalysisWindow():
 
 def openGridView():
     folder_path = filedialog.askdirectory(title="Select a Folder Containing Images")
+    imgFolderName = os.path.basename(folder_path)
     
     if not folder_path:
         return
@@ -229,12 +239,22 @@ def openGridView():
         single_view_window.geometry("500x600")
 
         img_label = Label(single_view_window)
-        img_label.pack()
+        img_label.pack(fill="both", expand=True)
 
-        text_label = Label(single_view_window, text="", justify=LEFT, padx=10, pady=10, wraplength=400)
-        text_label.pack()
+        analysis_label = Label(single_view_window, text="", anchor="center", pady=20)
+        analysis_label.pack()
+        
+        labels_frame = Frame(single_view_window)
+        labels_frame.pack()
 
-        button_frame = Frame(single_view_window)
+        model_labels = {}  
+
+        for idx, model in enumerate(models):
+            model_labels[model] = Label(labels_frame, text=f"{model}: Processing...", padx=10, pady=10, wraplength=800, anchor="center")
+            model_labels[model].grid(row=0, column=idx, padx=10)
+            labels_frame.grid_columnconfigure(idx, weight=1)
+
+        button_frame = Frame(single_view_window, padx=10, pady=10)
         button_frame.pack()
 
         def get_image_size(image_path):
@@ -269,7 +289,7 @@ def openGridView():
                         original_size = get_image_size(image_files[current_index[0]])
                         if original_size:
                             width, height = original_size
-                            print(f"Original image size: {width}x{height}")
+                            print(f"Original image size: {width}x{height}") 
 
                         for brand_info in yaml_data[matched_brand]:
                             image_size = brand_info['image_size']
@@ -285,17 +305,49 @@ def openGridView():
                                 img_label.config(image=photo)
                                 img_label.image = photo
 
-                                analysis_output = f"Image {current_index[0] + 1} of {len(image_files)}\nFile Path: {image_files[current_index[0]]}\nFurther analysis results would be displayed here."
-                                text_label.config(text=analysis_output)
-                                return
+                                filename = os.path.basename(image_files[current_index[0]])
 
-                        text_label.config(text="No matching size found for this image.")
-                    else:
-                        text_label.config(text=f"No coordinates found for brand: {folder_name}")
-                else:
-                    text_label.config(text="YAML file not found.")
+                                ### Display Stats on GUI Window (START)
+                                yaml_path = f"C:/dev/capstone/imorgonUltrasound/imgFolder/{imgFolderName}/true_results.yaml" ### change hard coded import directory
+                                with open(yaml_path, "r") as file:
+                                    true_results = yaml.safe_load(file) 
+
+                                exact_keywords = true_results.get(filename, [])
+                                analysis_output = f"Image {current_index[0] + 1} of {len(image_files)}\tFile Name: {filename}\tExact Keywords: {', '.join(exact_keywords) if exact_keywords else 'None'}"
+                                analysis_label.config(text=analysis_output)
+
+                                imgFolder_result_path = os.path.join(os.getcwd(), f"Export/{imgFolderName}_results.yaml")
+                                with open(imgFolder_result_path, 'r') as img_results:
+                                    img_data = yaml.safe_load(img_results)
+
+                                for model in models:
+                                    if model in img_data:
+                                        output_text = f"{model}\n"
+                                        if "images" in img_data[model] and filename in img_data[model]["images"]:
+                                            # Original detected keywords
+                                            detected_keywords = img_data[model]["images"][filename].get("detected_keywords", [])
+                                            found_keywords = list(dict.fromkeys(detected_keywords))  
+
+                                            # Lowercase for comparison
+                                            lower_detected_keywords = [kw.lower() for kw in found_keywords]
+                                            lower_exact_keywords = [ek.lower() for ek in exact_keywords]
+
+                                            # Match keywords: preserve original casing but compare lowercased
+                                            match_detected_keywords = [
+                                                original_kw for original_kw, lower_kw in zip(found_keywords, lower_detected_keywords)
+                                                if any(ek in lower_kw for ek in lower_exact_keywords)
+                                            ]
+
+                                            match_keywords_str = ", ".join(match_detected_keywords) if match_detected_keywords else "None"
+
+                                            # output_text += f"OCR Detected Keywords: {found_keywords_str}\n"
+                                            avg_time = img_data[model]["average_time_per_image"]
+                                            output_text += f"{match_keywords_str}\n"
+                                            output_text += f"Avg Time: {avg_time}"
+                                        model_labels[model].config(text=output_text)
             except Exception as e:
-                text_label.config(text=f"Error loading image: {e}")
+                for model in models:
+                    model_labels[model].config(text=f"Error loading image: {e}")
 
         def next_image():
             if current_index[0] < len(image_files) - 1:
@@ -419,7 +471,7 @@ logo_label = Label(imageDesc_Frame, image=logo)
 logo_label.grid(row = 0, column = 1, pady = (10, 5))
 T = Text(imageDesc_Frame, height = 5, width = 30, wrap = WORD)
 T.tag_configure("tag_name", justify='center')
-desc = "Welcome to iMorgon's ultrasound annotation extraction program."
+desc = "Welcome to iMorgon's ultrasound annotation extraction program." 
 T.insert(tk.END, desc)
 T.tag_add("tag_name", "1.0", "end")
 T.grid(row = 1, column = 1, padx = (5, 10))
@@ -430,7 +482,7 @@ dropDown_Frame.columnconfigure(1, weight=1)
 dropDown_Frame.columnconfigure(2, weight=1)
 modelFrame = LabelFrame(dropDown_Frame,text="Models")
 modelFrame.grid(row = 0, column = 1, pady = 5)
-models = ["EasyOCR", "RapidOCR", "PaddleOCR", "DocTR", "Tesseract"]
+models = ["EasyOCR", "RapidOCR", "PaddleOCR", "Tesseract"]
 modelDrop = ttk.Combobox(modelFrame, value=models)
 modelDrop.current(0)
 modelDrop.grid(row=0, pady = 5)
