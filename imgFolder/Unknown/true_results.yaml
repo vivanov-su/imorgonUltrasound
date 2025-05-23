@@ -30,7 +30,7 @@
 01034.jpeg:
 - LK
 - Dist
-- 10.1
+- '10.1'
 - cm
 01035.jpeg:
 - LEFT
@@ -42,13 +42,13 @@
 - LESION
 - '1'
 - WID
-- 0.57
+- '0.57'
 - cm
 - LG
-- 0.62
+- '0.62'
 - cm
 - HT
-- 0.40
+- '0.40'
 - cm
 - LONG
 # LEFT
@@ -76,7 +76,7 @@
 - RT
 - KIDNEY
 - LONG
-- 11.51
+- '11.51'
 - cm
 01075.jpeg:
 - RT
@@ -87,13 +87,13 @@
 01076.jpeg:
 - Dist
 - A
-- 34.2
+- '34.2'
 - mm
 - B
-- 38.6
+- '38.6'
 - mm
 - C
-- 38.5
+- '38.5'
 - mm
 # RT
 # KIDNEY
@@ -107,29 +107,29 @@
 01100.jpeg:
 - GB
 - WALL
-- 0.14
+- '0.14'
 - cm
 - GB
 - TRANS
 - LLD
 01104.jpeg:
 - CBD
-- 0.39
+- '0.39'
 - cm
 01107.jpeg:
 - CBD
-- 0.41
+- '0.41'
 - cm
 01110.jpeg:
 - SPLEEN
 - LONG
-- 9.29
+- '9.29'
 - cm
 01115.jpeg:
 - LT
 - KIDNEY
 - LONG
-- 10.22
+- '10.22'
 - cm
 01120.jpeg:
 - LT

@@ -4,7 +4,7 @@ import yaml
 from src.config_loader import load_yaml_config
 from src.ocr_engine import OCREngine
 from src.box_merger import post_process
-from src.image_redactor import apply_vendor_inclusion_zones
+from src.image_preprocessor import preprocess_image
 from PIL import Image
 
 def process_ultrasound_scans(input_directory_str, valid_annotation_keywords_dict, vendor_inclusion_zones_dict, ocr_settings_dict):
@@ -22,12 +22,12 @@ def process_ultrasound_scans(input_directory_str, valid_annotation_keywords_dict
         if filename.lower().endswith((".png", ".jpg", ".jpeg", ".tiff", ".gif")):            
             print(f"Processing image: {filename}")
 
-            # 1) Black out unneeded regions of the image
+            # 1) Preprocess image, adding filters and inclusion zones as per settings
             with Image.open(os.path.join(input_directory_str, filename)) as image:
-                simplified_image = apply_vendor_inclusion_zones(image, input_directory_str, vendor_inclusion_zones_dict, ocr_settings_dict)
+                preprocessed_image = preprocess_image(image, input_directory_str, vendor_inclusion_zones_dict, ocr_settings_dict)
 
             # 2) Pass image through the OCR engine
-            results = engine.run_ocr(simplified_image)
+            results = engine.run_ocr(preprocessed_image)
 
             # 3) Clean up artifacts, spellcheck detected words, and format the OCR data 
             clean_results = post_process(results, valid_annotation_keywords_dict, ocr_settings_dict)

@@ -17,7 +17,7 @@ class OCREngine:
         if self.ocr_engine_choice == "RapidOCR": self.engine = RapidOCR()
         elif self.ocr_engine_choice == "PaddleOCR": self.engine = PaddleOCR(use_angle_cls=True, use_gpu=False, lang="en")
         elif self.ocr_engine_choice == "EasyOCR": self.engine = Reader(["en"], gpu=False, detector = "dbnet18")
-        elif self.ocr_engine_choice == "DocTR": self.engine = ocr_predictor(det_arch="db_resnet50", reco_arch="crnn_vgg16_bn", pretrained=True)
+        elif self.ocr_engine_choice == "DocTR": self.engine = ocr_predictor(det_arch="linknet_resnet18", reco_arch="crnn_vgg16_bn", pretrained=True)
         elif self.ocr_engine_choice == "Tesseract": self.engine = pytesseract
         else: raise ValueError(f"Unsupported OCR engine!")
 
@@ -113,7 +113,7 @@ class OCREngine:
     def run_ocr(self, image):
         if self.ocr_engine_choice == "RapidOCR": output = self.engine(image)
         elif self.ocr_engine_choice == "PaddleOCR": output = self.engine.ocr(np.array(image))
-        elif self.ocr_engine_choice == "EasyOCR": output = self.engine.readtext(np.array(image), detail=1, paragraph=False)
+        elif self.ocr_engine_choice == "EasyOCR": output = self.engine.readtext(np.array(image), detail=1, paragraph=False, batch_size=32)
         elif self.ocr_engine_choice == "DocTR": output = self.engine([np.array(image)])
         elif self.ocr_engine_choice == "Tesseract": output = self.run_tesseract(image)
 
