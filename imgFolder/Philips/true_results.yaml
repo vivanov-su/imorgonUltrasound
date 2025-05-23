@@ -28,11 +28,9 @@
 - Prox
 - CCA
 - PSV
-- '71.2'
-- cm/s
+- 71.2cm/s
 - EDV
-- '21.2'
-- cm/s
+- 21.2cm/s
 - RI
 - '0.70'
 01004.jpeg:
@@ -41,7 +39,6 @@
 01005.jpeg:
 - RT
 - BULB
-- RT
 - CCA
 - D
 010050.jpeg:
@@ -52,21 +49,17 @@
 - LO
 - M
 - Dist
-- '1.04'
-- cm
+- 1.04cm
 01006.jpeg:
 - RT
 - CCA
-- P
+- D
 - R
 - Dist
-- CCA
 - PSV
-- '-80.8'
-- cm/s
+- -80.8cm/s
 - EDV
-- '-30.1'
-- cm/s
+- -30.1cm/s
 - RI
 - '0.63'
 01006_1_1_1_1.tiff:
@@ -75,21 +68,14 @@
 01007.jpeg:
 - RT
 - ECA
-- RT
 - BULB
 01008.tiff:
 - Livr
 - Lesion
 - '1'
 - L
-- '0.8'
-- cm
-- Livr
-- Lesion
-- '1'
+- 0.8cm
 - H
-- '0.8'
-- cm
 - Liver
 - Long
 01008_1_1_1.tiff:
@@ -102,13 +88,10 @@
 - ECA
 - R
 - Prox
-- ECA
 - PSV
-- '-65.4'
-- cm/s
+- -65.4cm/s
 - EDV
-- '-21.2'
-- cm/s
+- -21.2cm/s
 - RI
 - '0.68'
 01009_1_1.tiff:
@@ -127,13 +110,10 @@
 - RT
 - ICA
 - ORIGIN
-- RT
 - BULB
 01011_1_1_1.tiff:
 - CBD
-- '0.5'
-- cm
-- CBD
+- 0.5cm
 - DISTL
 - Supine
 01011_1_1_1_1_1_1_1_1_1_1.tiff:
@@ -150,19 +130,15 @@
 - ORIGIN
 - R
 - Prox
-- ICA
 - PSV
-- '-69.3'
-- cm/s
+- -69.3cm/s
 - EDV
-- '-32.1'
-- cm/s
+- -32.1cm/s
 - RI
 - '0.54'
 01013.tiff:
 - Dist
-- '0.468'
-- cm
+- 0.468cm
 - PANC
 01014.jpeg:
 - RT
@@ -170,13 +146,10 @@
 - P
 - R
 - Prox
-- ICA
 - PSV
-- '-80.2'
-- cm/s
+- -80.2cm/s
 - EDV
-- '-34.0'
-- cm/s
+- -34.0cm/s
 - RI
 - '0.58'
 01014_1_1_1_1_1_1_1_1.tiff:
@@ -190,12 +163,9 @@
 01015_1_1.tiff:
 - Uterus
 - Length
-- '3.32'
-- cm
-- Uterus
+- 3.32cm
 - Height
-- '1.48'
-- cm
+- 1.48cm
 - SAG
 - UT
 - ML
@@ -209,13 +179,10 @@
 - D
 - R
 - Dist
-- ICA
 - PSV
-- '-82.7'
-- cm/s
+- -82.7cm/s
 - EDV
-- '-42.3'
-- cm/s
+- -42.3cm/s
 - RI
 - '0.49'
 01017.tiff:
@@ -224,8 +191,7 @@
 01017_1_1.tiff:
 - Uterus
 - Width
-- '2.68'
-- cm
+- 2.68cm
 - TRV
 - UT
 01018.jpeg:
@@ -234,13 +200,10 @@
 - D
 - R
 - Dist
-- ICA
 - PSV
-- '-85.9'
-- cm/s
+- -85.9cm/s
 - EDV
-- '-51.9'
-- cm/s
+- -51.9cm/s
 - RI
 - '0.40'
 01019.jpeg:
@@ -253,11 +216,9 @@
 - Vertebral
 - A
 - PSV
-- '-47.5'
-- cm/s
+- -47.5cm/s
 - EDV
-- '-15.4'
-- cm/s
+- -15.4cm/s
 - RI
 - '0.68'
 01022.jpeg:
@@ -268,8 +229,7 @@
 01023_1_1_1_1_1_1_1_1_1_1.tiff:
 - MPV
 - Vel
-- '20.5'
-- cm/s
+- 20.5cm/s
 01024.jpeg:
 - RT
 - BIF
@@ -289,13 +249,10 @@
 - P
 - L
 - Prox
-- CCA
 - PSV
-- '80.2'
-- cm/s
+- 80.2cm/s
 - EDV
-- '23.1'
-- cm/s
+- 23.1cm/s
 - RI
 - '0.71'
 01027_1_1.tiff:
@@ -309,8 +266,7 @@
 - Lesion
 - '2'
 - W
-- '0.9'
-- cm
+- 0.9cm
 - Liver
 - Trans
 01028_1_1_1_1.tiff:
@@ -324,7 +280,6 @@
 01029.jpeg:
 - LT
 - BULB
-- LT
 - CCA
 - D
 01029_1_1.tiff:
@@ -337,19 +292,15 @@
 - D
 - L
 - Dist
-- CCA
 - PSV
-- '-83.4'
-- cm/s
+- -83.4cm/s
 - EDV
-- '-28.2'
-- cm/s
+- -28.2cm/s
 - RI
 - '0.66'
 01031.jpeg:
 - LT
 - ECA
-- LT
 - BULB
 01031_1_1_1_1.tiff:
 - Long
@@ -371,13 +322,10 @@
 - ECA
 - L
 - Prox
-- ECA
 - PSV
-- '-47.7'
-- cm/s
+- -47.7cm/s
 - EDV
-- '-10.7'
-- cm/s
+- -10.7cm/s
 - RI
 - '0.77'
 01033_1_1_1_1.tiff:
@@ -389,13 +337,11 @@
 - LT
 - ICA
 - ORIGIN
-- LT
 - BULB
 01035.jpeg:
 - LT
 - ICA
 - ORIGIN
-- LT
 - BULB
 01035.tiff:
 - Liver
@@ -411,13 +357,10 @@
 - ORIGIN
 - L
 - Prox
-- ICA
 - PSV
-- '-63.2'
-- cm/s
+- -63.2cm/s
 - EDV
-- '-23.6'
-- cm/s
+- -23.6cm/s
 - RI
 - '0.63'
 01036_1_1.tiff:
@@ -436,8 +379,7 @@
 - Lesion
 - '3'
 - W
-- '1.4'
-- cm
+- 1.4cm
 - Liver
 - Trans
 01039.jpeg:
@@ -446,27 +388,22 @@
 - P
 - L
 - Prox
-- ICA
 - PSV
-- '-64.5'
-- cm/s
+- -64.5cm/s
 - EDV
-- '-32.7'
-- cm/s
+- -32.7cm/s
 - RI
 - '0.49'
 01040.jpeg:
 - LT
 - ICA
+- M
 - L
 - Mid
-- ICA
 - PSV
-- '-88.5'
-- cm/s
+- -88.5cm/s
 - EDV
-- '-30.1'
-- cm/s
+- -30.1cm/s
 - RI
 - '0.66'
 01041.jpeg:
@@ -481,24 +418,18 @@
 - Dist
 - ICA
 - PSV
-- '-81.5'
-- cm/s
+- -81.5cm/s
 - EDV
-- '-37.9'
-- cm/s
+- -37.9cm/s
 - RI
 - '0.54'
 01043_1_1_1.tiff:
 - R
 - Ov
 - Length
-- '0.49'
-- cm
-- R
-- Ov
+- 0.49cm
 - Height
-- '0.80'
-- cm
+- 0.80cm
 - Sag
 - Rt
 - Ovary
@@ -510,19 +441,16 @@
 - Dist
 - ICA
 - PSV
-- '-94.9'
-- cm/s
+- -94.9cm/s
 - EDV
-- '-36.6'
-- cm/s
+- -36.6cm/s
 - RI
 - '0.61'
 01047_1_1.tiff:
 - L
 - Ov
 - Width
-- '0.95'
-- cm
+- 0.95cm
 - Trans
 - Lt
 - Ovary
@@ -530,8 +458,7 @@
 - RT
 - Renal
 - Length
-- '9.8'
-- cm
+- 9.8cm
 - Liver
 - RK
 - Long
@@ -542,11 +469,9 @@
 - Vertebral
 - A
 - PSV
-- '-55.1'
-- cm/s
+- -55.1cm/s
 - EDV
-- '-21.2'
-- cm/s
+- -21.2cm/s
 - RI
 - '0.62'
 01052.tiff: []
@@ -579,14 +504,9 @@
 - Lesion
 - '1'
 - L
-- '0.6'
-- cm
-- Livr
-- Lesion
-- '1'
+- 0.6cm
 - H
-- '0.6'
-- cm
+- 0.6cm
 - Long
 - Right
 - LIVER
@@ -603,8 +523,7 @@
 - Lesion
 - '2'
 - W
-- '0.6'
-- cm
+- 0.6cm
 - Trans
 - Right
 - LIVER
@@ -627,9 +546,7 @@
 - Supine
 01119_1_1_1_1.tiff:
 - CBD
-- '0.6'
-- cm
-- CBD
+- 0.6cm
 01133.tiff: []
 01150_1_1.tiff:
 - LLL
