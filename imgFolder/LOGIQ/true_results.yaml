@@ -1,15 +1,19 @@
 01010.jpeg:
 - L
-- 4.03cm
-- 2.64cm
+- 4.03
+- cm
+- 2.64
+- cm
 01011.jpeg:
 - BPD
 - HC
 - OFD(HC)
-- 5.71cm
+- 5.71
+- cm
 - 23w2d
 - '>97%'
-- 20.30cm
+- 20.30
+- cm
 - 22w3d
 - 80.4%
 - '7.15'
@@ -36,7 +40,8 @@
 - RT
 - LT
 - FL
-- 3.79cm
+- 3.79
+- cm
 - 21w6d
 - 63.9%
 01029.jpeg: []
@@ -53,7 +58,8 @@
 01047.jpeg: []
 01049.jpeg:
 - AFI-Q1
-- 4.83cm
+- 4.83
+- cm
 01050.jpeg:
 - CI
 - PLAC
@@ -66,7 +72,8 @@
 - LONG
 01053.jpeg:
 - L
-- 3.04cm
+- 3.04
+- cm
 01256.jpeg:
 - TRANS
 - Rt
@@ -79,7 +86,8 @@
 - SPLEEN
 - Spleen
 - Length
-- 7.1 cm
+- 7.1 
+- cm
 01512.jpeg:
 - Trans
 - Rt
@@ -87,8 +95,10 @@
 - Lower
 - Nodule
 - '1:'
-- 0.8cm
-- 1.2cm
+- 0.8
+- cm
+- 1.2
+- cm
 01512_1.tiff:
 - Long
 - Spleen
@@ -108,7 +118,8 @@
 - Kidney
 - Renal
 - Length
-- 6.8cm
+- 6.8
+- cm
 011280.jpeg:
 - Trans
 - Rt
@@ -116,8 +127,10 @@
 - Lower
 - Nodule
 - '2:'
-- 1.0cm
-- 1.3cm
+- 1.0
+- cm
+- 1.3
+- cm
 011280_1.tiff:
 - Long
 - Lt
@@ -134,8 +147,10 @@
 - Upper
 - TRANS
 - L
-- 0.3cm
-- 1.0cm
+- 0.3
+- cm
+- 1.0
+- cm
 012560.jpeg:
 - Trans
 - Rt
@@ -160,15 +175,18 @@
 - Thyroid
 - Mid
 - AP
-- 2.0cm
+- 2.0
+- cm
 - Trans
-- 2.9cm
+- 2.9
+- cm
 013328_1.tiff:
 - Long
 - Aorta
 - Prox
 - AP
-- 0.8cm
+- 0.8
+- cm
 013584.jpeg:
 - Trans
 - Rt
@@ -176,14 +194,17 @@
 - Mid
 - Nodule
 - '3:'
-- 1.1cm
-- 1.3cm
+- 1.1
+- cm
+- 1.3
+- cm
 013584_1.tiff:
 - Long
 - Aorta
 - Distal
 - AP
-- 0.7cm
+- 0.7
+- cm
 013585.jpeg:
 - Trans
 - Rt
@@ -193,9 +214,12 @@
 - Lymph
 - Node
 - '1:'
-- 0.6cm
-- 0.8cm
-- 1.3cm
+- 0.6
+- cm
+- 0.8
+- cm
+- 1.3
+- cm
 014608.jpeg:
 - Long
 - Rt
@@ -213,15 +237,18 @@
 016144.jpeg:
 - Trans
 - Isthmus
-- 2.6mm
+- 2.6
+- mm
 016400.tiff:
 - Livr
 - Lesion
 - '1'
 - Length
-- 1.41cm
+- 1.41
+- cm
 - Height
-- 1.38cm
+- 1.38
+- cm
 - SAG
 - LIVER
 016912.jpeg:
@@ -230,9 +257,12 @@
 - LONG
 - Nodule
 - '1:'
-- 0.3cm
-- 0.4cm
-- 0.4cm
+- 0.3
+- cm
+- 0.4
+- cm
+- 0.4
+- cm
 017168.jpeg:
 - Long
 - Rt
@@ -246,7 +276,8 @@
 - Lesion
 - '1'
 - Width
-- 1.59cm
+- 1.59
+- cm
 - TRANS
 - LIVER
 017936.jpeg:
@@ -260,8 +291,10 @@
 - Thyroid
 - Mid
 - AP
-- 1.2cm
-- 1.0cm
+- 1.2
+- cm
+- 1.0
+- cm
 018448_1.tiff:
 - Long
 - Rt
@@ -276,9 +309,12 @@
 - LONG
 - Nodule
 - '1:'
-- 0.2cm
-- 0.2cm
-- 0.2cm
+- 0.2
+- cm
+- 0.2
+- cm
+- 0.2
+- cm
 019472.jpeg:
 - Trans
 - Lt
@@ -295,66 +331,96 @@
 - Other
 - '1'
 - Trans
-- 1.6cm
+- 1.6
+- cm
 - Long
-- 2.8cm
+- 2.8
+- cm
 - '2'
 - AP
-- 0.3cm
-- 1.2cm
-- 1.4cm
+- 0.3
+- cm
+- 1.2
+- cm
+- 1.4
+- cm
 - '3'
-- 0.3cm
-- 1.5cm
-- 2.7cm
+- 0.3
+- cm
+- 1.5
+- cm
+- 2.7
+- cm
 - Art
 - Diameter
-- 3.4mm
+- 3.4
+- mm
 39001.tiff:
 - Prox
 - AP
-- 0.7cm
-- 1.3cm
+- 0.7
+- cm
+- 1.3
+- cm
 - Mid
-- 2.2cm
+- 2.2
+- cm
 - Trans
-- 2.8cm
+- 2.8
+- cm
 - Distal
-- 4.1cm
-- 5.1cm
+- 4.1
+- cm
+- 5.1
+- cm
 39002.tiff:
 - Rt
 - Liver
 - Other
 - '1'
 - AP
-- 0.6cm
+- 0.6
+- cm
 - Trans
-- 1.8cm
+- 1.8
+- cm
 - Long
-- 3.5cm
+- 3.5
+- cm
 - '2'
 - AP
-- 0.5cm
-- 0.7cm
-- 0.9cm
+- 0.5
+- cm
+- 0.7
+- cm
+- 0.9
+- cm
 - '3'
-- 0.4cm
-- 1.2cm
-- 1.8cm
+- 0.4
+- cm
+- 1.2
+- cm
+- 1.8
+- cm
 39005.tiff:
 - Rt
 - CIA
 - AP
-- 1.2cm
+- 1.2
+- cm
 - Trans
-- 0.7cm
+- 0.7
+- cm
 - EIA
-- 3.6cm
+- 3.6
+- cm
 - Lt
-- 3.8cm
-- 6.0cm
-- 7.8cm
+- 3.8
+- cm
+- 6.0
+- cm
+- 7.8
+- cm
 39006.tiff:
 - GB
 - Polyp
@@ -362,89 +428,120 @@
 - '20.7'
 - mm
 - Stone
-- 3.9cm
+- 3.9
+- cm
 - Other
 - AP
-- 6.4cm
+- 6.4
+- cm
 - '2:'
-- 6.8mm
-- 4.0cm
+- 6.8
+- mm
+- 4.0
+- cm
 - Trans
-- 6.9cm
+- 6.9
+- cm
 - '3:'
-- 8.3mm
-- 0.3cm
+- 8.3
+- mm
+- 0.3
+- cm
 - Long
-- 5.2cm
+- 5.2
+- cm
 39008.tiff:
 - Bladder
 - Wall
 - Thickness
-- 4.5mm
+- 4.5
+- mm
 - '1:'
-- 1.1cm
+- 1.1
+- cm
 - '2:'
-- 2.3cm
+- 2.3
+- cm
 - '3:'
-- 3.4cm
+- 3.4
+- cm
 39012.tiff:
 - MHA
 - PS
-- 28cm/s
+- 28
+- cm/s
 - ED
-- 8cm/s
+- 8
+- cm/s
 - RI
 - '0.71'
 - Lt
 - Hep
 - Art
-- 48cm/s
-- 35cm/s
-- 35cm/s
+- 48
+- cm/s
+- 35
+- cm/s
+- 35
+- cm/s
 - Rt
-- 42cm/s
-- 19cm/s
+- 42
+- cm/s
+- 19
+- cm/s
 - '0.53'
 - Mid
-- 33cm/s
-- 19cm/s
+- 33
+- cm/s
+- 19
+- cm/s
 - Hepatic
 - End
-- 9cm/s
+- 9
+- cm/s
 39013.tiff:
 - Mid
-- 22cm/s
-- 20cm/s
+- 22
+- cm/s
+- 20
+- cm/s
 - Hepatic
 - End
-- 9cm/s
+- 9
+-cm/s
 39025.tiff:
 - Ao
 - PS
-- 33cm/s
+- 33
+- cm/s
 0110496.jpeg:
 - Trans
 - Isthmus
 - Nodule
 - '1:'
-- 0.4cm
-- 0.8cm
+- 0.4
+- cm
+- 0.8
+- cm
 0110496.tiff:
 - CHD
 - CHD
-- 0.6mm
+- 0.6
+- mm
 0110497.jpeg:
 - Long
 - Lt
 - Thyroid
 - Mid
-- 3.4mm
+- 3.4
+- mm
 0110752.jpeg:
 - Long
 - Isthmus
 - Nodule
 - '1:'
-- 0.7cm
+- 0.7
+- cm
 0111008.jpeg:
 - Long
 - Lt
@@ -456,8 +553,10 @@
 - Thryoid
 - Lower
 - L
-- 0.4cm
-- 0.5cm
+- 0.4
+- cm
+- 0.5
+- cm
 0111776.jpeg:
 - Long
 - Lt
@@ -469,8 +568,10 @@
 - Thyroid
 - Mid
 - AP
-- 1.7cm
-- 2.2cm
+- 1.7
+- cm
+- 2.2
+- cm
 0112544.jpeg:
 - Trans
 - Lt
@@ -493,8 +594,10 @@
 - Mid
 - Nodule
 - '1:'
-- 0.9cm
-- 1.9cm
+- 0.9
+- cm
+- 1.9
+- cm
 0113568.tiff:
 - Long
 - GB
