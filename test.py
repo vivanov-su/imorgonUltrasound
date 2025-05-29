@@ -10,54 +10,53 @@ from executable import process_ultrasound_scans
 from src.config_loader import load_yaml_config
 
 
-def compute_metrics(ocr_results_dict, true_results_dict, time_taken, num_images):
-    engine_performance = {
-        "images": {},
+def compute_metrics(detected_results_dict, expected_results_dict, time_taken, num_images):
+    engine_performance = {"images": {},
         "avg_true_positives_percent": 0.0,
         "avg_true_positives_substring_percent": 0.0,
         "avg_false_positives_count": 0.0,
         "average_time_per_image": 0.0
     }
 
-    total_true_positive_percent = 0.0
-    total_true_positive_substr_percent = 0.0
-    total_false_positives = 0
+    total_matched_keywords_percent = 0.0
+    total_matched_substrings_percent = 0.0
+    total_noise = 0
 
-    for filename, true_keywords in true_results_dict.items():
-        ocr_keywords = set(ocr_results_dict.get(filename, []))
+    for filename, expected_keywords in expected_results_dict.items():
+        detected_keywords_set = set(detected_results_dict.get(filename, []))
 
         # Calculate true positives - regular strict match
-        true_keywords_set = set(true_keywords)
-        true_positives = ocr_keywords & true_keywords_set
-        false_positives = ocr_keywords - true_keywords_set
+        expected_keywords_set = set(expected_keywords)
+        matched_keywords_set = detected_keywords_set & expected_keywords_set
+        noise_set = detected_keywords_set - expected_keywords_set
 
-        true_positive_percent = len(true_positives) / len(true_keywords_set) if true_keywords_set else 1.0
-        false_positives_count = len(false_positives)
+        matched_keywords_percent = len(matched_keywords_set) / len(expected_keywords_set) if expected_keywords_set else 1.0
+        noise_count = len(noise_set)
 
         # Calculate case-insensitive substring matches
-        ocr_keywords_lower = [kw.lower() for kw in ocr_keywords]
-        true_substring_positives = [
-            true_kw for true_kw in true_keywords_set
-            if any(true_kw.lower() in ocr_kw for ocr_kw in ocr_keywords_lower)
+        detected_keywords_lower_set = [kw.lower() for kw in detected_keywords_set]
+        matched_substrings = [
+            expected_kw for expected_kw in expected_keywords_set
+            if any(expected_kw.lower() in detected_kw for detected_kw in detected_keywords_lower_set)
         ]
-        true_positive_substring_percent = (len(true_substring_positives) / len(true_keywords_set)) if true_keywords_set else 1.0
+        matched_substrings_percent = (len(matched_substrings) / len(expected_keywords_set)) if expected_keywords_set else 1.0
 
         engine_performance["images"][filename] = {
-            "expected_keywords": list(true_keywords),
-            "detected_keywords": list(ocr_keywords),
-            "true_positives_percent": round(true_positive_percent, 2),
-            "true_positives_substring_percent": round(true_positive_substring_percent, 2),
-            "false_positives_count": false_positives_count,
+            "expected_keywords": list(expected_keywords),
+            "detected_keywords": list(detected_keywords_set),
+            "true_positives_percent": round(matched_keywords_percent, 2),
+            "true_positives_substring_percent": round(matched_substrings_percent, 2),
+            "false_positives_count": noise_count,
         }
 
-        total_true_positive_percent += true_positive_percent
-        total_true_positive_substr_percent += true_positive_substring_percent
-        total_false_positives += false_positives_count
+        total_matched_keywords_percent += matched_keywords_percent
+        total_matched_substrings_percent += matched_substrings_percent
+        total_noise += noise_count
 
     # Calculate overall averages
-    engine_performance["avg_true_positives_percent"] = round(total_true_positive_percent / num_images, 2)
-    engine_performance["avg_true_positives_substring_percent"] = round(total_true_positive_substr_percent / num_images, 2)
-    engine_performance["avg_false_positives_count"] = total_false_positives / num_images
+    engine_performance["avg_true_positives_percent"] = round(total_matched_keywords_percent / num_images, 2)
+    engine_performance["avg_true_positives_substring_percent"] = round(total_matched_substrings_percent / num_images, 2)
+    engine_performance["avg_false_positives_count"] = total_noise / num_images
     engine_performance["average_time_per_image"] = round(time_taken / num_images, 2)
 
     return engine_performance
@@ -79,7 +78,6 @@ def save_metrics_to_excel(performance_metrics, excel_file_path, input_directory)
         "OCR Engine",
         "Detected Keywords",
         "Correctly Detected (%)",
-        "Correctly Detected Substring (%)",
         "Noise Detected (#)",
     ]
     for col, header in enumerate(headers):
@@ -87,7 +85,9 @@ def save_metrics_to_excel(performance_metrics, excel_file_path, input_directory)
 
     row = 1  # Start writing data from the second row
 
-    # Load the inclusion zones from the YAML file
+    # Load the OCR settings and inclusion zones from the YAML files
+    with open("ocr_settings.yaml", 'r') as f:
+        ocr_settings_dict = yaml.safe_load(f)
     with open("vendor_inclusion_zones.yaml", 'r') as f:
         inclusion_zones = yaml.safe_load(f)
 
@@ -110,8 +110,9 @@ def save_metrics_to_excel(performance_metrics, excel_file_path, input_directory)
                     None
                 )
 
-                # Draw the inclusion zones if they exist
-                if matched_zones:
+                # Draw the inclusion zones if they are enabled and exist for the image
+                zones_enabled = ocr_settings_dict.get("use_inclusion_zones", False)
+                if zones_enabled and matched_zones:
                     draw = ImageDraw.Draw(img)
                     for box in matched_zones["boxes"]:
                         top_left = (box[0], box[1])
@@ -143,9 +144,8 @@ def save_metrics_to_excel(performance_metrics, excel_file_path, input_directory)
             if detected_kw.startswith('='):
                 detected_kw = ' ' + detected_kw  # Edge case where Excel interprets it as formula
             worksheet.write(row, 3, detected_kw)
-            worksheet.write(row, 4, image_metrics.get("true_positives_percent", 0.0), percentage_format)  # True Positives Percentage
-            worksheet.write(row, 5, image_metrics.get("true_positives_substring_percent", 0.0), percentage_format)
-            worksheet.write(row, 6, image_metrics.get("false_positives_count", 0))  # False Positives Count
+            worksheet.write(row, 4, image_metrics.get("true_positives_substring_percent", 0.0), percentage_format) # Substring match Percentage
+            worksheet.write(row, 5, image_metrics.get("false_positives_count", 0))  # False Positives Count
             row += 1
 
         # Leave an empty row after each image's engines
@@ -159,9 +159,8 @@ def save_metrics_to_excel(performance_metrics, excel_file_path, input_directory)
 
     summary_headers = [
         "OCR Engine",
-        "Average True Positives (%)",
-        "Average True Positives Substring (%)",
-        "Average False Positives Count",
+        "Average Accuracy Per Image (%)",
+        "Average Noise Per Image (#)",
         "Average Time Per Image (secs)"
     ]
 
@@ -171,10 +170,9 @@ def save_metrics_to_excel(performance_metrics, excel_file_path, input_directory)
     row += 1
     for engine, metrics in performance_metrics.items():
         worksheet.write(row, 0, engine)  # OCR Engine
-        worksheet.write(row, 1, metrics["avg_true_positives_percent"], percentage_format)  # Avg True Positives (%)
-        worksheet.write(row, 2, metrics.get("avg_true_positives_substring_percent", 0.0), percentage_format)  # Substring %
-        worksheet.write(row, 3, metrics["avg_false_positives_count"])  # Avg False Positives Count
-        worksheet.write(row, 4, metrics["average_time_per_image"])  # Avg Time Per Image (secs)
+        worksheet.write(row, 1, metrics.get("avg_true_positives_substring_percent", 0.0), percentage_format)  # Substring %
+        worksheet.write(row, 2, metrics["avg_false_positives_count"])  # Avg False Positives Count
+        worksheet.write(row, 3, metrics["average_time_per_image"])  # Avg Time Per Image (secs)
         row += 1
 
     # Close the workbook

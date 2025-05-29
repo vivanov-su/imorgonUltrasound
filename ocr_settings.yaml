@@ -1,3 +1,5 @@
 ocr_engine: RapidOCR  # Options: RapidOCR, PaddleOCR, EasyOCR, DocTR, Tesseract
-require_valid_keyword: True  # Whether detected text must contain at least one valid annotation keyword in order to be processed & outputted
+require_valid_keyword: False  # Whether detected text must contain at least one valid annotation keyword in order to be processed & outputted
+black_and_white: False  # Whether to make the image black and white
+increase_image_contrast: False  # Whether to use CLAHE during preprocessing to increase contrast
 use_inclusion_zones: True  # Whether to black out all pixels outside of the specified regions
