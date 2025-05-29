@@ -12,9 +12,9 @@ from src.config_loader import load_yaml_config
 
 def compute_metrics(detected_results_dict, expected_results_dict, time_taken, num_images):
     engine_performance = {"images": {},
-        "avg_true_positives_percent": 0.0,
-        "avg_true_positives_substring_percent": 0.0,
-        "avg_false_positives_count": 0.0,
+        "avg_correctly_detected_percent": 0.0,
+        "avg_correctly_detected_substring_percent": 0.0,
+        "avg_unknown_keywords_count": 0.0,
         "average_time_per_image": 0.0
     }
 
@@ -23,10 +23,10 @@ def compute_metrics(detected_results_dict, expected_results_dict, time_taken, nu
     total_noise = 0
 
     for filename, expected_keywords in expected_results_dict.items():
+        expected_keywords_set = set(expected_keywords)
         detected_keywords_set = set(detected_results_dict.get(filename, []))
 
         # Calculate true positives - regular strict match
-        expected_keywords_set = set(expected_keywords)
         matched_keywords_set = detected_keywords_set & expected_keywords_set
         noise_set = detected_keywords_set - expected_keywords_set
 
@@ -44,9 +44,9 @@ def compute_metrics(detected_results_dict, expected_results_dict, time_taken, nu
         engine_performance["images"][filename] = {
             "expected_keywords": list(expected_keywords),
             "detected_keywords": list(detected_keywords_set),
-            "true_positives_percent": round(matched_keywords_percent, 2),
-            "true_positives_substring_percent": round(matched_substrings_percent, 2),
-            "false_positives_count": noise_count,
+            "correctly_detected_percent": round(matched_keywords_percent, 2),
+            "correctly_detected_substring_percent": round(matched_substrings_percent, 2),
+            "unknown_keywords_count": noise_count,
         }
 
         total_matched_keywords_percent += matched_keywords_percent
@@ -54,9 +54,9 @@ def compute_metrics(detected_results_dict, expected_results_dict, time_taken, nu
         total_noise += noise_count
 
     # Calculate overall averages
-    engine_performance["avg_true_positives_percent"] = round(total_matched_keywords_percent / num_images, 2)
-    engine_performance["avg_true_positives_substring_percent"] = round(total_matched_substrings_percent / num_images, 2)
-    engine_performance["avg_false_positives_count"] = total_noise / num_images
+    engine_performance["avg_correctly_detected_percent"] = round(total_matched_keywords_percent / num_images, 2)
+    engine_performance["avg_correctly_detected_substring_percent"] = round(total_matched_substrings_percent / num_images, 2)
+    engine_performance["avg_unknown_keywords_count"] = total_noise / num_images
     engine_performance["average_time_per_image"] = round(time_taken / num_images, 2)
 
     return engine_performance
@@ -144,8 +144,8 @@ def save_metrics_to_excel(performance_metrics, excel_file_path, input_directory)
             if detected_kw.startswith('='):
                 detected_kw = ' ' + detected_kw  # Edge case where Excel interprets it as formula
             worksheet.write(row, 3, detected_kw)
-            worksheet.write(row, 4, image_metrics.get("true_positives_substring_percent", 0.0), percentage_format) # Substring match Percentage
-            worksheet.write(row, 5, image_metrics.get("false_positives_count", 0))  # False Positives Count
+            worksheet.write(row, 4, image_metrics.get("correctly_detected_substring_percent", 0.0), percentage_format) # Substring match Percentage
+            worksheet.write(row, 5, image_metrics.get("unknown_keywords_count", 0))  # False Positives Count
             row += 1
 
         # Leave an empty row after each image's engines
@@ -170,8 +170,8 @@ def save_metrics_to_excel(performance_metrics, excel_file_path, input_directory)
     row += 1
     for engine, metrics in performance_metrics.items():
         worksheet.write(row, 0, engine)  # OCR Engine
-        worksheet.write(row, 1, metrics.get("avg_true_positives_substring_percent", 0.0), percentage_format)  # Substring %
-        worksheet.write(row, 2, metrics["avg_false_positives_count"])  # Avg False Positives Count
+        worksheet.write(row, 1, metrics.get("avg_correctly_detected_substring_percent", 0.0), percentage_format)  # Substring %
+        worksheet.write(row, 2, metrics["avg_unknown_keywords_count"])  # Avg False Positives Count
         worksheet.write(row, 3, metrics["average_time_per_image"])  # Avg Time Per Image (secs)
         row += 1
 
